@@ -1681,7 +1681,12 @@ function genSchedule(school){
     const winProb = Math.min(88, Math.max(12, Math.round(baseWinProb + rng(-6,6))));
     // Top-25 rank for elite opponents
     const rank = opp.prestige >= 5 ? rng(1,8) : opp.prestige === 4 ? (Math.random()<0.55?rng(9,20):null) : null;
-    const oppRecord = `${rng(0,6)}-${rng(0,4)}`;
+    // Realistic opponent record based on their prestige and game week
+    const oppWinRate = 0.3 + opp.prestige * 0.1; // prestige 1=40%, 5=80%
+    const gamesPlayed = Math.max(0, wk - 1);
+    const oppWins = Math.round(gamesPlayed * oppWinRate + (Math.random()-0.5)*0.8);
+    const oppLoss = Math.max(0, gamesPlayed - Math.max(0,oppWins));
+    const oppRecord = oppWins+'-'+oppLoss;
     return {
       wk,
       opp: (isAway ? '@ ' : '') + (rank ? `#${rank} ` : '') + opp.short,
@@ -3391,10 +3396,14 @@ function openBoosterPitch(name){
     return;
   }
 
-  // Pick a random game and go straight in — no menu
-  const gameType = BOOSTER_GAMES[Math.floor(Math.random()*BOOSTER_GAMES.length)];
+  // Use the booster's pre-assigned game type; rotate to next game after each play
+  const gameKeys2 = ['fieldgoal','scramble','hailmary','pressquiz'];
+  const current = b._assignedGame || gameKeys2[0];
+  const nextIdx = (gameKeys2.indexOf(current)+1) % gameKeys2.length;
   S('modal');
-  launchMiniGame(gameType, name);
+  launchMiniGame(current, name);
+  // Rotate for next visit
+  b._assignedGame = gameKeys2[nextIdx];
 }
 
 function closePitch(){
@@ -4497,7 +4506,10 @@ const PITCH_SCENARIOS = [
 ];
 
 function renderBoosters(){
-  const gameLabels = ['🏈 Field Goal','🏃 QB Scramble','🎯 Hail Mary','⚡ Press Blitz'];
+  const gameKeys  = ['fieldgoal','scramble','hailmary','pressquiz'];
+  const gameLabels= ['🏈 Field Goal','🏃 QB Scramble','🎯 Hail Mary','⚡ Press Blitz'];
+  // Assign a game per booster deterministically (cycles through all 4)
+  BOOSTERS.forEach((b,i)=>{ if(!b._assignedGame) b._assignedGame=gameKeys[i%gameKeys.length]; });
   document.getElementById('dw').innerHTML=`
     <div class="page-header">
       <div class="page-title">NIL <span class="page-title-accent">Collective</span></div>
@@ -4512,7 +4524,8 @@ function renderBoosters(){
         const onCooldown = !canPitchBooster(b);
         const nilReq = nilRequests[b.name];
         const nilPending = nilReq && nilReq.pending;
-        const randomGame = gameLabels[Math.floor(Math.random()*gameLabels.length)];
+        const gIdx = gameKeys.indexOf(b._assignedGame||'fieldgoal');
+        const gameLabel = gameLabels[gIdx>=0?gIdx:0];
         const ne = b.name.replace(/'/g,"\\'");
         return `<div class="booster-card-full">
           <div class="bcf-header">
@@ -4536,7 +4549,7 @@ function renderBoosters(){
             <div class="bcf-wants">${b.wants.map(w=>`<div class="bcf-want">${w}</div>`).join('')}</div>
             <button class="bcf-pitch-btn" ${onCooldown?'disabled style="opacity:.45;cursor:not-allowed;"':''}
               onclick="openBoosterPitch('${ne}')">
-              ${onCooldown?'⏳ Met This Week':randomGame+' →'}
+              ${onCooldown?'⏳ Met This Week':gameLabel+' →'}
             </button>
             ${b.rel>=50?`
             <button style="width:100%;margin-top:7px;padding:11px;border-radius:var(--r16);
@@ -4672,8 +4685,222 @@ function simGame(){
         S('loss');
       }
       renderOverview();
+      // Check if regular season is over
+      const allDone = SCHEDULE.every(g=>g.result);
+      if(allDone) setTimeout(checkPlayoffEligibility, 800);
     }
   );
+}
+
+// ── PLAYOFF SYSTEM ──
+function checkPlayoffEligibility(){
+  const wins = GS.wins, losses = GS.losses;
+  const prestige = GS.school.prestige;
+  // CFP qualification: 10+ wins, or 9+ wins with prestige 4-5
+  const qualifies = wins >= 10 || (wins >= 9 && prestige >= 4) || (wins >= 8 && prestige === 5);
+  if(!qualifies){
+    showSeasonSummary(false);
+    return;
+  }
+  // Seeding based on wins and prestige
+  const seed = wins >= 12 ? 1 : wins >= 11 ? rng(1,3) : wins >= 10 ? rng(3,6) : rng(7,12);
+  showPlayoffBracket(seed);
+}
+
+function showSeasonSummary(qualified){
+  const wins = GS.wins, losses = GS.losses;
+  const bowl = wins >= 6;
+  const ac = wins >= 9 ? '#4fce8a' : wins >= 6 ? '#E8A020' : '#e07070';
+  openM(
+    qualified ? '🏟️ CFP Playoff Bound!' : bowl ? '🎳 Bowl Game' : '📉 Season Over',
+    `${wins}-${losses} · ${GS.school.name}`,
+    wins >= 10 ? 'Elite Season' : wins >= 6 ? 'Bowl Eligible' : 'Rebuilding Year',
+    wins >= 10 ? `Incredible ${wins}-${losses} season. The CFP committee is calling.` :
+    wins >= 6  ? `${wins}-${losses}. Bowl eligible. Keep building.` :
+                 `${wins}-${losses}. Hard year. The portal is open — rebuild the roster.`,
+    [{label:'New Season →', cls:'primary', fn:()=>{ closeM(); startNewSeason(); }}]
+  );
+}
+
+function showPlayoffBracket(seed){
+  // Generate bracket opponents based on seed
+  const roundNames = seed <= 4 ? ['First Round BYE','Quarterfinal','Semifinal','National Championship'] 
+                               : ['First Round','Quarterfinal','Semifinal','National Championship'];
+  const hasBye = seed <= 4;
+
+  const ov = document.createElement('div');
+  ov.id = 'playoffOv';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:300;background:rgba(5,8,6,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow:auto;';
+
+  const bracketOpps = [
+    // R1 opponent (if no bye)
+    !hasBye ? SCHOOLS.filter(s=>s.prestige>=3&&s.id!==GS.school.id).sort(()=>Math.random()-.5)[0] : null,
+    // QF opponent
+    SCHOOLS.filter(s=>s.prestige>=4&&s.id!==GS.school.id).sort(()=>Math.random()-.5)[0],
+    // SF opponent
+    SCHOOLS.filter(s=>s.prestige>=4&&s.id!==GS.school.id).sort(()=>Math.random()-.5)[1],
+    // Championship
+    SCHOOLS.filter(s=>s.prestige===5&&s.id!==GS.school.id).sort(()=>Math.random()-.5)[0],
+  ];
+
+  ov.innerHTML = `
+    <div style="max-width:680px;width:100%;animation:modalIn .4s cubic-bezier(.34,1.56,.64,1) both;">
+      <div style="text-align:center;margin-bottom:28px;">
+        <div style="font-family:var(--co);font-size:11px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;margin-bottom:6px;">College Football Playoff</div>
+        <div style="font-family:var(--co);font-size:clamp(28px,6vw,44px);color:#fff;line-height:1;">You're In The <span style="color:var(--gold);">CFP</span></div>
+        <div style="font-size:14px;color:var(--t2);margin-top:8px;">${GS.wins}-${GS.losses} · Seed #${seed} · ${GS.school.name}</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+        ${roundNames.map((rnd,i)=>{
+          const opp = bracketOpps[i];
+          if(i===0 && hasBye) return `
+            <div style="background:rgba(79,206,138,.08);border:1px solid rgba(79,206,138,.25);border-radius:var(--r16);padding:16px 20px;display:flex;align-items:center;gap:14px;">
+              <div style="font-size:24px;">🎟️</div>
+              <div><div style="font-family:var(--co);font-size:14px;color:#4fce8a;">First Round BYE</div>
+              <div style="font-size:12px;color:var(--t3);">As a top-4 seed you advance directly to the Quarterfinal</div></div>
+            </div>`;
+          if(!opp) return '';
+          const oppWp = Math.min(88,Math.max(12, 50-(opp.prestige-GS.school.prestige)*9+(GS.wins-8)*3));
+          return `
+            <div style="background:var(--glass);border:1px solid var(--gb);border-radius:var(--r16);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="font-size:20px;">${['🏟️','⚔️','🔥','🏆'][i]}</div>
+                <div>
+                  <div style="font-family:var(--co);font-size:11px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;">${rnd}</div>
+                  <div style="font-family:var(--co);font-size:16px;color:#fff;margin-top:2px;">vs ${opp.short}</div>
+                  <div style="font-size:11px;color:var(--t3);margin-top:2px;">${opp.conf} · Prestige ${opp.prestige}</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:var(--co);font-size:24px;color:${oppWp>=55?'#4fce8a':oppWp>=45?'var(--gold)':'#e07070'};">${oppWp}%</div>
+                <div style="font-size:10px;color:var(--t3);">Win prob</div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button onclick="document.getElementById('playoffOv').remove();startPlayoffRun(${seed},${JSON.stringify(bracketOpps.filter(x=>x).map(x=>x.id))});"
+          style="padding:16px;border-radius:var(--rpill);background:var(--gold);color:#000;border:none;
+          font-family:var(--co);font-size:16px;cursor:pointer;font-weight:700;">
+          Start Playoff Run →
+        </button>
+        <button onclick="document.getElementById('playoffOv').remove();showSeasonSummary(true);"
+          style="padding:16px;border-radius:var(--rpill);background:var(--surf);color:var(--t2);border:1px solid var(--gb);
+          font-family:var(--co);font-size:14px;cursor:pointer;">
+          Skip to Summary
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+}
+
+function startPlayoffRun(seed, oppIds){
+  const rounds = seed<=4
+    ? ['Quarterfinal','Semifinal','National Championship']
+    : ['First Round','Quarterfinal','Semifinal','National Championship'];
+  let roundIdx = 0;
+  let eliminated = false;
+
+  function playRound(){
+    if(roundIdx >= rounds.length || eliminated){
+      finishPlayoff(roundIdx, rounds.length, eliminated);
+      return;
+    }
+    const rndName = rounds[roundIdx];
+    const oppId = oppIds[seed<=4 ? roundIdx+1 : roundIdx];
+    const opp = SCHOOLS.find(s=>s.id===oppId) || SCHOOLS.filter(s=>s.prestige>=4).sort(()=>Math.random()-.5)[0];
+    const diff = getDiff();
+    const winProb = Math.min(88,Math.max(12,50-(opp.prestige-GS.school.prestige)*9+(GS.wins-8)*3+diff.winMod));
+
+    window._qbIQ = (PLAYERS.find(p=>p.pos==='QB')||{}).attrs?.IQ||80;
+
+    // Show round card first
+    const rc = document.createElement('div');
+    rc.style.cssText = 'position:fixed;inset:0;z-index:310;background:rgba(5,8,6,.97);display:flex;align-items:center;justify-content:center;padding:20px;';
+    rc.innerHTML = `
+      <div style="max-width:420px;width:100%;text-align:center;animation:modalIn .4s cubic-bezier(.34,1.56,.64,1) both;">
+        <div style="font-family:var(--co);font-size:11px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;margin-bottom:8px;">CFP · ${rndName}</div>
+        <div style="font-size:48px;margin-bottom:16px;">🏈</div>
+        <div style="font-family:var(--co);font-size:28px;color:#fff;margin-bottom:6px;">${GS.school.abbr}</div>
+        <div style="font-size:14px;color:var(--t3);margin-bottom:4px;">vs</div>
+        <div style="font-family:var(--co);font-size:28px;color:#fff;margin-bottom:16px;">${opp.short}</div>
+        <div style="font-family:var(--co);font-size:18px;color:${winProb>=55?'#4fce8a':winProb>=45?'var(--gold)':'#e07070'};margin-bottom:20px;">${winProb}% win probability</div>
+        <button onclick="this.closest('div[style]').remove();"
+          style="padding:14px 40px;border-radius:var(--rpill);background:var(--gold);color:#000;border:none;font-family:var(--co);font-size:16px;cursor:pointer;">
+          Take the Field →
+        </button>
+      </div>`;
+    document.body.appendChild(rc);
+    rc.querySelector('button').addEventListener('click',()=>{
+      startGameSim(opp.short, winProb, GS.school.color, GS.school.abbr, opp.abbr, result=>{
+        if(result.win){
+          GS.wins++;
+          roundIdx++;
+          toast('✅ Playoff Win!', `Advance to the ${rounds[roundIdx]||'Championship'}!`);
+          setTimeout(playRound, 600);
+        } else {
+          GS.losses++;
+          eliminated = true;
+          toast('❌ Eliminated', `${opp.short} ends your playoff run.`);
+          setTimeout(()=>finishPlayoff(roundIdx, rounds.length, true), 600);
+        }
+      });
+    });
+  }
+
+  playRound();
+}
+
+function finishPlayoff(roundsWon, totalRounds, eliminated){
+  const champion = !eliminated && roundsWon >= totalRounds;
+  const finalist = !eliminated && roundsWon === totalRounds-1;
+
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:320;background:rgba(5,8,6,.97);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .4s ease;';
+
+  const emoji = champion ? '🏆' : finalist ? '🥈' : roundsWon>=2 ? '🔥' : '💪';
+  const headline = champion ? 'NATIONAL CHAMPIONS!' : finalist ? 'CFP Finalist' : roundsWon>=2 ? 'Final Four!' : 'Playoff Run';
+  const col = champion ? '#FFD700' : finalist ? '#b0b8c8' : 'var(--tc)';
+
+  if(champion) burstConfetti(GS.school.color||'#E8A020');
+
+  ov.innerHTML = `
+    <div style="max-width:440px;width:100%;text-align:center;animation:modalIn .5s cubic-bezier(.34,1.56,.64,1) both;">
+      <div style="font-size:88px;margin-bottom:16px;filter:drop-shadow(0 0 30px ${col}88);animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;">${emoji}</div>
+      <div style="font-family:var(--co);font-size:clamp(24px,6vw,40px);color:${col};line-height:1;margin-bottom:8px;">${headline}</div>
+      <div style="font-family:var(--co);font-size:18px;color:#fff;margin-bottom:6px;">${GS.school.name}</div>
+      <div style="font-size:13px;color:var(--t2);margin-bottom:24px;">Final Record: ${GS.wins}-${GS.losses}</div>
+      ${champion?`<div style="font-size:14px;color:var(--gold);margin-bottom:20px;line-height:1.6;">
+        The confetti is falling. Recruiting phones are ringing.<br>The dynasty is real.
+      </div>`:''}
+      <button onclick="this.closest('div[style]').remove();startNewSeason();"
+        style="padding:16px 40px;border-radius:var(--rpill);background:${col};color:#000;border:none;font-family:var(--co);font-size:16px;cursor:pointer;font-weight:700;">
+        New Season →
+      </button>
+    </div>`;
+  document.body.appendChild(ov);
+}
+
+function startNewSeason(){
+  // Reset season but keep coach, upgrades, relationships
+  GS.week=1; GS.wins=0; GS.losses=0;
+  GS.jobSec=Math.min(100,GS.jobSec+10);
+  // Regenerate schedule
+  SCHEDULE.length=0;
+  genSchedule(GS.school).forEach(g=>SCHEDULE.push(g));
+  // Regenerate recruits
+  const posPool=buildPosPool();
+  RECRUITS.length=0;
+  for(let i=0;i<900;i++) RECRUITS.push(genRecruit(i,posPool));
+  RECRUITS.sort((a,b)=>b.stars-a.stars||b.surfOvr-a.surfOvr);
+  document.getElementById('wkChip').textContent='Wk 1/15';
+  document.getElementById('nilChip').textContent='$'+GS.nil.toFixed(1)+'M NIL';
+  go('dashboard');
+  renderOverview();
+  toast('🏈 New Season!','Roster locked in. Recruiting class starts fresh. Good luck.');
 }
 
 // ═══════════════════════════════════════════════
