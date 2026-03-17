@@ -22,12 +22,64 @@
   --t1:rgba(255,255,255,0.93);--t2:rgba(255,255,255,0.58);--t3:rgba(255,255,255,0.30);
   --co:'Contrail One',sans-serif;--body:'DM Sans',sans-serif;
   --r10:10px;--r16:16px;--r22:22px;--r28:28px;--rpill:999px;
-  /* team color system — overridden by JS on school pick */
   --tc:#E8A020;--tc-s:rgba(232,160,32,0.13);--tc-g:rgba(232,160,32,0.28);
   --tc-glow:rgba(232,160,32,0.35);--tc-dim:rgba(232,160,32,0.06);
+  --bg:#080e09;
 }
-html{font-family:var(--body);background:#080e09;color:var(--t1);overflow-x:hidden;}
-body{min-height:100vh;font-family:var(--body);background:#080e09;color:var(--t1);overflow-x:hidden;}
+/* ── LIGHT MODE ── */
+[data-theme="light"]{
+  --glass:rgba(0,0,0,0.04);--gb:rgba(0,0,0,0.10);--gh:rgba(0,0,0,0.07);
+  --surf:rgba(0,0,0,0.03);--surfh:rgba(0,0,0,0.07);
+  --t1:rgba(0,0,0,0.88);--t2:rgba(0,0,0,0.55);--t3:rgba(0,0,0,0.35);
+  --bg:#eef2ef;
+}
+[data-theme="light"] html,[data-theme="light"] body{background:#eef2ef;color:rgba(0,0,0,.88);}
+[data-theme="light"] #stadiumBg{opacity:.08;}
+[data-theme="light"] .topbar{background:rgba(238,242,239,.92)!important;border-bottom:1px solid rgba(0,0,0,.1);}
+[data-theme="light"] .dash-wrap{background:#eef2ef;}
+[data-theme="light"] .stat-card,[data-theme="light"] .g-card,[data-theme="light"] .target-card,
+[data-theme="light"] .booster-card-full,[data-theme="light"] .bfc,[data-theme="light"] .upgrade-card,
+[data-theme="light"] .profile-slot{background:rgba(255,255,255,.7)!important;border-color:rgba(0,0,0,.1)!important;}
+[data-theme="light"] .sc{background:rgba(255,255,255,.7)!important;}
+[data-theme="light"] .modal-panel,[data-theme="light"] .pc-modal{background:rgba(240,244,241,.98)!important;}
+[data-theme="light"] .nav-pills .npb{color:rgba(0,0,0,.6);}
+[data-theme="light"] .nav-pills .npb.active{background:rgba(0,0,0,.07)!important;color:rgba(0,0,0,.88)!important;}
+
+/* ── THEME TOGGLE BUTTON ── */
+.theme-toggle{
+  position:relative;width:58px;height:28px;border-radius:999px;
+  cursor:pointer;border:none;padding:0;background:none;flex-shrink:0;overflow:hidden;
+}
+.tt-track{
+  position:absolute;inset:0;border-radius:999px;transition:background .4s ease;
+  background:linear-gradient(135deg,#1a1a3e 0%,#2d2b6e 100%);
+}
+[data-theme="light"] .tt-track{background:linear-gradient(135deg,#87ceeb 0%,#bce4f5 100%);}
+
+/* sun knob */
+.tt-knob{
+  position:absolute;top:4px;width:20px;height:20px;border-radius:50%;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),background .3s;
+  left:4px;
+  background:radial-gradient(circle,#e8e8f0 30%,#b8b8cc 100%);
+  box-shadow:inset -2px -1px 0 rgba(0,0,0,.12);
+}
+[data-theme="light"] .tt-knob{
+  transform:translateX(30px);
+  background:radial-gradient(circle,#FFD700 55%,#FFA500 100%);
+  box-shadow:0 0 6px 2px rgba(255,200,0,.4);
+}
+
+/* stars (dark side) */
+.tt-stars{position:absolute;inset:0;pointer-events:none;transition:opacity .3s;}
+[data-theme="light"] .tt-stars{opacity:0;}
+.tt-star{position:absolute;background:#fff;border-radius:50%;}
+
+/* cloud puffs (light side) */
+.tt-clouds{position:absolute;inset:0;pointer-events:none;transition:opacity .3s;opacity:0;}
+[data-theme="light"] .tt-clouds{opacity:1;}
+html{font-family:var(--body);background:var(--bg,#080e09);color:var(--t1);overflow-x:hidden;}
+body{min-height:100vh;font-family:var(--body);background:var(--bg,#080e09);color:var(--t1);overflow-x:hidden;}
 
 /* ── TEAM COLOR THEMING ── */
 /* These elements adapt to --tc automatically */
@@ -1231,12 +1283,24 @@ body{min-height:100vh;font-family:var(--body);background:#080e09;color:var(--t1)
       </nav>
     </div>
     <div class="topbar-r">
-      <div class="chip" id="wkChip">Week 1</div>
+      <div class="chip" id="wkChip" style="font-family:var(--co);font-size:14px;font-weight:700;min-width:80px;text-align:center;">Wk 1/15</div>
       <div class="chip gold" id="nilChip">$0M NIL</div>
       <div class="chip" id="diffChip" style="font-family:var(--co);font-size:11px;">Varsity</div>
       <button class="adv-btn" style="background:var(--glass);color:var(--t2);border:1px solid var(--gb);" onclick="saveCurrentGame();FFF.sound.play('save')" title="Save">💾</button>
       <button class="adv-btn" style="background:var(--glass);color:var(--t2);border:1px solid var(--gb);" id="muteBtn" onclick="toggleMute()" title="Sound">🔊</button>
-      <button class="adv-btn" onclick="advWeek()">Next Week →</button>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">
+        <div class="tt-track"></div>
+        <div class="tt-stars" id="ttStars"></div>
+        <div class="tt-clouds">
+          <svg width="58" height="28" viewBox="0 0 58 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;">
+            <ellipse cx="38" cy="20" rx="10" ry="6" fill="rgba(255,255,255,.7)"/>
+            <ellipse cx="44" cy="18" rx="7" ry="5" fill="rgba(255,255,255,.85)"/>
+            <ellipse cx="50" cy="21" rx="6" ry="4" fill="rgba(255,255,255,.6)"/>
+          </svg>
+        </div>
+        <div class="tt-knob"></div>
+      </button>
+      <button class="adv-btn" onclick="advWeek()" style="font-size:13px;padding:8px 18px;">Next Week →</button>
     </div>
   </div>
   <div class="dash-wrap" id="dw"></div>
@@ -2201,20 +2265,6 @@ function renderSchools(conf){
     </div>`).join('');
 }
 
-function pickSc(id){
-  selSc=SCHOOLS.find(s=>s.id===id);
-  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('sc-'+id).classList.add('sel');
-  document.getElementById('dockName').textContent=selSc.name;
-  document.getElementById('dockSub').textContent=selSc.conf+' · $'+selSc.nil+'M NIL · '+selSc.difficulty;
-  document.getElementById('dock').classList.add('vis');
-  setStadiumBg(selSc);
-}
-function clearSc(){
-  selSc=null;
-  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('dock').classList.remove('vis');
-}
 
 // ═══════════════════════════════════════════════
 //  START GAME
@@ -2255,7 +2305,7 @@ function startGame(){
   l.src=logoUrl(selSc);l.alt=selSc.short;
   document.getElementById('tcName').textContent=selSc.short;
   document.getElementById('tcSub').textContent=GS.coachName+' · Head Coach · 2026';
-  document.getElementById('wkChip').textContent='Week 1';
+  document.getElementById('wkChip').textContent='Wk 1/15';
   document.getElementById('nilChip').textContent='$'+GS.nil.toFixed(1)+'M NIL';
   if(document.getElementById('diffChip')){
     const d=getDiff();
@@ -3314,6 +3364,1079 @@ function runRivalPressure(){
 //  BOOSTER MINI-GAME
 // ═══════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════
+//  BOOSTER MINI-GAMES
+// ═══════════════════════════════════════════════
+
+// Track cooldowns so you can't spam the same booster
+const boosterCooldowns = {}; // name -> week last pitched
+
+function canPitchBooster(b){
+  return !boosterCooldowns[b.name] || GS.week > boosterCooldowns[b.name];
+}
+
+// NIL request tracker
+const nilRequests = {}; // name -> { week, amount, pending }
+
+// ── Open the booster action screen ──
+// Game types pool — random each visit
+const BOOSTER_GAMES = ['fieldgoal','scramble','hailmary','pressquiz'];
+
+function openBoosterPitch(name){
+  const b = BOOSTERS.find(x=>x.name===name);
+  if(!b) return;
+
+  if(!canPitchBooster(b)){
+    toast('On Cooldown', 'Already met this week. Come back after advancing.');
+    return;
+  }
+
+  // Pick a random game and go straight in — no menu
+  const gameType = BOOSTER_GAMES[Math.floor(Math.random()*BOOSTER_GAMES.length)];
+  S('modal');
+  launchMiniGame(gameType, name);
+}
+
+function closePitch(){
+  const ov = document.getElementById('pitchOverlay');
+  if(ov){ ov.style.opacity='0'; ov.style.transition='opacity .25s'; setTimeout(()=>ov.remove(),260); }
+}
+
+
+// ── NIL Meeting Request ──
+function openNILRequest(name){
+  const b = BOOSTERS.find(x=>x.name===name);
+  if(!b) return;
+  S('modal');
+
+  const maxAsk = b.nil;
+  const minAsk = Math.round(b.nil * 0.3 * 10) / 10;
+
+  const ov = document.createElement('div');
+  ov.className = 'pitch-overlay';
+  ov.id = 'pitchOverlay';
+  ov.innerHTML = `
+    <div class="pitch-panel" style="max-width:440px;">
+      <div class="pitch-header">
+        <div class="pitch-avatar">💰</div>
+        <div class="pitch-header-info">
+          <div class="pitch-name">NIL Funding Request</div>
+          <div class="pitch-subtitle">${b.name} · ${b.type}</div>
+        </div>
+        <button onclick="closePitch()" style="background:none;border:none;color:var(--t3);font-size:20px;cursor:pointer;padding:4px 8px;">✕</button>
+      </div>
+      <div class="pitch-body">
+        <div class="pitch-prompt">"How much are you asking for, Coach? And it better be worth my time."</div>
+        <div style="margin-bottom:16px;">
+          <div style="font-family:var(--co);font-size:11px;color:var(--t3);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;">Request Amount</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            ${[minAsk, Math.round(b.nil*0.5*10)/10, Math.round(b.nil*0.75*10)/10, maxAsk].map(amt=>`
+              <div class="pitch-opt ${amt>=b.nil*0.75?'danger':amt>=b.nil*0.5?'risky':'good'}"
+                onclick="confirmNILRequest('${name.replace(/'/g,"\\'")}',${amt})"
+                style="flex-direction:column;text-align:center;padding:14px;">
+                <div style="font-family:var(--co);font-size:22px;color:var(--gold);">$${amt}M</div>
+                <div style="font-size:10px;color:var(--t3);margin-top:3px;">${amt>=b.nil*0.75?'Aggressive — risky':amt>=b.nil*0.5?'Bold ask':'Conservative'}</div>
+                <div style="font-size:10px;color:var(--t2);margin-top:5px;">Win: play mini-game</div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);text-align:center;">Higher asks require a better mini-game score to unlock</div>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+}
+
+function confirmNILRequest(name, amount){
+  const b = BOOSTERS.find(x=>x.name===name);
+  if(!b) return;
+  closePitch();
+
+  // Higher ask = harder threshold to beat
+  const threshold = amount >= b.nil ? 80 : amount >= b.nil*0.75 ? 65 : amount >= b.nil*0.5 ? 50 : 35;
+  setTimeout(()=>{
+    launchMiniGame('nilmeeting', name, {amount, threshold, boosterName: name});
+  }, 300);
+}
+
+// ── MINI GAME LAUNCHER ──
+function launchMiniGame(type, boosterName, opts){
+  const b = BOOSTERS.find(x=>x.name===boosterName);
+  if(!b) return;
+
+  const ov = document.createElement('div');
+  ov.id = 'miniGameOv';
+  ov.style.cssText = `position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.95);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    backdrop-filter:blur(8px);`;
+  document.body.appendChild(ov);
+
+  const games = {
+    fieldgoal: miniGameFieldGoal,
+    scramble:  miniGameScramble,
+    hailmary:  miniGameHailMary,
+    pressquiz: miniGamePressQuiz,
+    nilmeeting: miniGameNILMeeting,
+  };
+
+  (games[type]||miniGameFieldGoal)(ov, b, opts||{}, (score, passed)=>{
+    // score 0-100, passed = bool
+    boosterCooldowns[b.name] = GS.week;
+
+    let relDelta = 0, nilBonus = 0, headline = '', body = '';
+
+    if(type === 'nilmeeting'){
+      const req = opts||{};
+      if(passed){
+        nilBonus = req.amount||1;
+        GS.nil = Math.round((GS.nil + nilBonus)*10)/10;
+        document.getElementById('nilChip').textContent = '$'+GS.nil.toFixed(1)+'M NIL';
+        nilRequests[b.name] = {week:GS.week, amount:nilBonus, pending:false};
+        relDelta = rng(5,12);
+        b.rel = Math.min(100, b.rel + relDelta);
+        headline = `$${nilBonus}M Unlocked!`;
+        body = `${b.name} was impressed. Added $${nilBonus}M to your NIL pool.`;
+      } else {
+        relDelta = -rng(3,8);
+        b.rel = Math.max(0, b.rel + relDelta);
+        nilRequests[b.name] = {week:GS.week, amount:opts.amount, pending:true};
+        headline = 'Request Denied';
+        body = `${b.name} wasn't convinced. Try again next week with better numbers.`;
+      }
+    } else {
+      // Relationship games
+      if(score >= 80){      relDelta = rng(14,22); }
+      else if(score >= 60){ relDelta = rng(8,14);  }
+      else if(score >= 40){ relDelta = rng(3,8);   }
+      else if(score >= 20){ relDelta = rng(0,4);   }
+      else {                relDelta = rng(-6,-2);  }
+      b.rel = Math.max(0, Math.min(100, b.rel + relDelta));
+      headline = score>=80?'Crushed it!':score>=60?'Solid showing':score>=40?'Decent effort':'Rough outing';
+      body = `${b.name}: "${score>=80?'Now THAT\'s a program I can get behind.':score>=60?'Alright Coach, you\'ve got my attention.':score>=40?'Keep working. I\'m watching.':'I\'ve seen better from a junior varsity squad.'}"`;
+    }
+
+    showMiniGameResult(ov, score, passed, relDelta, nilBonus, headline, body, ()=>{
+      renderBoosters();
+    });
+  });
+}
+
+function showMiniGameResult(ov, score, passed, relDelta, nilBonus, headline, body, onClose){
+  const ac = passed||relDelta>5 ? '#4fce8a' : relDelta<0 ? '#e07070' : 'var(--gold)';
+  const emoji = score>=80?'🔥':score>=60?'✅':score>=40?'😐':'💀';
+  ov.innerHTML = `
+    <div style="text-align:center;max-width:400px;padding:40px 30px;
+      background:rgba(10,16,11,.98);border:1px solid var(--gb);border-radius:var(--r28);
+      animation:modalIn .4s cubic-bezier(.34,1.56,.64,1) both;">
+      <div style="font-size:72px;margin-bottom:16px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;">${emoji}</div>
+      <div style="font-family:var(--co);font-size:28px;color:#fff;margin-bottom:6px;">${headline}</div>
+      <div style="font-size:13px;color:var(--t2);margin-bottom:20px;line-height:1.6;font-style:italic;">${body}</div>
+      <div style="display:flex;gap:16px;justify-content:center;margin-bottom:20px;">
+        <div style="text-align:center;">
+          <div style="font-family:var(--co);font-size:36px;color:${ac};">${score}</div>
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;">Score</div>
+        </div>
+        <div style="width:1px;background:var(--gb);"></div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--co);font-size:36px;color:${relDelta>=0?'#4fce8a':'#e07070'};">${relDelta>=0?'+':''}${relDelta}</div>
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;">Relationship</div>
+        </div>
+        ${nilBonus ? `<div style="width:1px;background:var(--gb);"></div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--co);font-size:36px;color:var(--gold);">+$${nilBonus}M</div>
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;">NIL</div>
+        </div>` : ''}
+      </div>
+      <button onclick="this.closest('#miniGameOv').remove();(${onClose.toString()})()"
+        style="font-family:var(--co);font-size:15px;padding:14px 40px;border-radius:var(--rpill);
+        border:none;background:${ac};color:#000;cursor:pointer;transition:all .2s;">
+        Continue →
+      </button>
+    </div>`;
+}
+
+// ══════════════════════════════════════════
+//  MINI-GAME 1: FIELD GOAL CHALLENGE
+//  Click to set power, click to set angle
+// ══════════════════════════════════════════
+function miniGameFieldGoal(ov, b, opts, onDone){
+  const W = Math.min(520, window.innerWidth - 40);
+  const H = Math.min(480, window.innerHeight - 140);
+
+  ov.innerHTML = `
+    <div style="text-align:center;color:#fff;margin-bottom:10px;">
+      <div style="font-family:var(--co);font-size:11px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;">Field Goal Challenge</div>
+      <div style="font-family:var(--co);font-size:20px;">Head-on view · Madden style</div>
+    </div>
+    <canvas id="mgCanvas" width="${W}" height="${H}" style="border-radius:16px;display:block;cursor:pointer;touch-action:manipulation;"></canvas>
+    <div style="margin-top:10px;font-family:var(--co);font-size:13px;color:var(--t3);" id="mgInstr">CLICK to stop the power meter</div>
+    <div style="margin-top:6px;font-family:var(--co);font-size:11px;color:var(--t3);">Made: <span id="mgMade">0</span>/3 · Attempt: <span id="mgAttempt">1</span>/3</div>`;
+
+  const canvas = document.getElementById('mgCanvas');
+  const ctx = canvas.getContext('2d');
+  const cx = W/2, cy = H*0.52; // center of the radar circle
+  const outerR = Math.min(W,H)*0.36;
+  const innerR = outerR * 0.18; // sweet spot
+
+  let phase = 'power'; // power -> direction -> flying -> result
+  let powerAngle = -Math.PI/2; // starts at top (12 o'clock)
+  let powerSpeed = 0.04;
+  let lockedPower = null;
+
+  let dirAngle = 0; // 0 = straight
+  let dirSpeed = 0.035;
+  let lockedDir = null;
+
+  let kicks = 0, made = 0, score = 0;
+  let ballAnim = null; // {t, good}
+  let raf;
+
+  // Upright geometry (head-on view)
+  const upW = W*0.28, upH = H*0.38;
+  const upX = cx - upW/2, upY = H*0.04;
+  const crossbarY = upY + upH * 0.6;
+  const poleX = cx;
+
+  function drawStadium(){
+    // Sky gradient
+    const sky = ctx.createLinearGradient(0,0,0,H*0.65);
+    sky.addColorStop(0,'#0a0f1a');
+    sky.addColorStop(1,'#1a2840');
+    ctx.fillStyle = sky; ctx.fillRect(0,0,W,H*0.65);
+
+    // Stadium lights bloom
+    [[W*0.12,H*0.04],[W*0.88,H*0.04],[W*0.5,H*0.02]].forEach(([lx,ly])=>{
+      const g=ctx.createRadialGradient(lx,ly,0,lx,ly,W*0.2);
+      g.addColorStop(0,'rgba(255,240,180,.22)'); g.addColorStop(1,'transparent');
+      ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    });
+
+    // Crowd silhouette
+    ctx.fillStyle='rgba(20,30,20,.9)';
+    ctx.fillRect(0,H*0.55,W,H*0.12);
+    for(let x=0;x<W;x+=6){
+      const h=8+Math.sin(x*0.4)*4+(Math.random()<0.1?10:0);
+      ctx.fillRect(x,H*0.55-h,5,h+2);
+    }
+    // Color flashes in crowd
+    ['rgba(60,120,200,.4)','rgba(200,60,60,.4)','rgba(255,200,0,.3)'].forEach((c,ci)=>{
+      ctx.fillStyle=c;
+      for(let x=ci*30;x<W;x+=90){ ctx.fillRect(x,H*0.52,18,8); }
+    });
+
+    // Field — tight zoomed in view from kicker's perspective
+    const field=ctx.createLinearGradient(0,H*0.65,0,H);
+    field.addColorStop(0,'#1a5c1a'); field.addColorStop(1,'#0e3b0e');
+    ctx.fillStyle=field; ctx.fillRect(0,H*0.65,W,H*0.35);
+    // Hash marks and yard lines (perspective)
+    ctx.strokeStyle='rgba(255,255,255,.15)'; ctx.lineWidth=1;
+    for(let i=0;i<4;i++){
+      const y=H*0.65+i*(H*0.35/4);
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    }
+    // Center hash
+    ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(cx,H*0.65); ctx.lineTo(cx,H); ctx.stroke();
+  }
+
+  function drawUpright(){
+    ctx.strokeStyle='#e8c840';
+    ctx.lineWidth=5;
+    ctx.lineCap='round';
+    // Main pole
+    ctx.beginPath(); ctx.moveTo(poleX,H*0.65); ctx.lineTo(poleX,crossbarY); ctx.stroke();
+    // Crossbar
+    ctx.beginPath(); ctx.moveTo(upX,crossbarY); ctx.lineTo(upX+upW,crossbarY); ctx.stroke();
+    // Left arm
+    ctx.beginPath(); ctx.moveTo(upX,crossbarY); ctx.lineTo(upX,upY); ctx.stroke();
+    // Right arm
+    ctx.beginPath(); ctx.moveTo(upX+upW,crossbarY); ctx.lineTo(upX+upW,upY); ctx.stroke();
+    // Glow
+    ctx.shadowColor='rgba(255,220,0,.4)'; ctx.shadowBlur=12;
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(upX,upY); ctx.lineTo(upX+upW,upY); ctx.stroke();
+    ctx.shadowBlur=0;
+  }
+
+  function drawRadar(){
+    // Outer ring (full circle)
+    ctx.strokeStyle='rgba(255,255,255,.15)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(cx,cy,outerR,0,Math.PI*2); ctx.stroke();
+
+    // Zone rings
+    const zones=[
+      {r:outerR*0.35,col:'rgba(79,206,138,.25)'},
+      {r:outerR*0.55,col:'rgba(232,160,32,.18)'},
+      {r:outerR*0.78,col:'rgba(224,82,82,.12)'},
+    ];
+    zones.forEach(z=>{
+      ctx.fillStyle=z.col;
+      ctx.beginPath(); ctx.arc(cx,cy,z.r,0,Math.PI*2); ctx.fill();
+    });
+
+    // Sweet spot center
+    const sg=ctx.createRadialGradient(cx,cy,0,cx,cy,innerR);
+    sg.addColorStop(0,'rgba(79,206,138,.5)');
+    sg.addColorStop(1,'rgba(79,206,138,.0)');
+    ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(cx,cy,innerR*1.4,0,Math.PI*2); ctx.fill();
+
+    // Crosshairs
+    ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(cx-outerR,cy); ctx.lineTo(cx+outerR,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-outerR); ctx.lineTo(cx,cy+outerR); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Labels
+    ctx.fillStyle='rgba(79,206,138,.7)'; ctx.font=`bold ${Math.round(W*0.025)}px monospace`;
+    ctx.textAlign='center'; ctx.fillText('SWEET SPOT',cx,cy+innerR*1.8);
+  }
+
+  function drawPowerNeedle(){
+    // Sweeping needle around the circle
+    const nx = cx + Math.cos(powerAngle)*outerR;
+    const ny = cy + Math.sin(powerAngle)*outerR;
+
+    // Power arc (filled portion)
+    const startA = -Math.PI/2;
+    const progress = (powerAngle - startA + Math.PI*4) % (Math.PI*2);
+    const pct = progress / (Math.PI*2);
+    const col = pct > 0.8 ? '#e05252' : pct > 0.55 ? '#E8A020' : '#4fce8a';
+
+    ctx.strokeStyle = col; ctx.lineWidth = 8;
+    ctx.beginPath(); ctx.arc(cx,cy,outerR,startA,powerAngle); ctx.stroke();
+
+    // Needle tip dot
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(nx,ny,7,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(nx,ny,5,0,Math.PI*2); ctx.fill();
+
+    // Power label
+    const pctLabel = Math.round(pct*100);
+    ctx.fillStyle = col; ctx.font=`bold ${Math.round(W*0.038)}px 'Courier New',monospace`;
+    ctx.textAlign='center'; ctx.fillText(`${pctLabel}%`,cx,cy-8);
+    ctx.fillStyle='rgba(255,255,255,.4)'; ctx.font=`${Math.round(W*0.025)}px 'Courier New',monospace`;
+    ctx.fillText('POWER',cx,cy+14);
+  }
+
+  function drawDirectionNeedle(){
+    // After power locked — sweeping direction bar
+    const maxSwing = outerR * 0.85;
+    const dx = Math.sin(dirAngle) * maxSwing;
+    const barY = cy + outerR*0.15;
+
+    // Direction track
+    ctx.fillStyle='rgba(255,255,255,.07)';
+    ctx.beginPath(); ctx.roundRect(cx-maxSwing-6,barY-8,maxSwing*2+12,16,8); ctx.fill();
+
+    // Sweet zone highlight
+    const sweetW = maxSwing*0.22;
+    ctx.fillStyle='rgba(79,206,138,.2)';
+    ctx.beginPath(); ctx.roundRect(cx-sweetW,barY-8,sweetW*2,16,8); ctx.fill();
+
+    // Direction cursor
+    const cursorX = cx + dx;
+    const cursorCol = Math.abs(dx) < maxSwing*0.2 ? '#4fce8a' : Math.abs(dx) < maxSwing*0.5 ? '#E8A020' : '#e05252';
+    ctx.fillStyle = cursorCol;
+    ctx.beginPath(); ctx.roundRect(cursorX-5,barY-10,10,20,4); ctx.fill();
+
+    // Aim label
+    const aimLabel = Math.abs(dx) < maxSwing*0.2 ? 'STRAIGHT!' : dx < 0 ? 'LEFT' : 'RIGHT';
+    ctx.fillStyle=cursorCol; ctx.font=`bold ${Math.round(W*0.035)}px 'Courier New',monospace`;
+    ctx.textAlign='center'; ctx.fillText(aimLabel,cx,barY-22);
+
+    // Power locked label
+    const lockedPct = Math.round(((lockedPower - (-Math.PI/2) + Math.PI*4) % (Math.PI*2)) / (Math.PI*2) * 100);
+    ctx.fillStyle='rgba(255,255,255,.4)'; ctx.font=`${Math.round(W*0.022)}px monospace`;
+    ctx.fillText(`Power locked: ${lockedPct}%`, cx, cy-outerR*0.6);
+  }
+
+  function drawBallAnimation(){
+    if(!ballAnim) return;
+    ballAnim.t += 0.06;
+    const t = ballAnim.t;
+    if(t > 1.2) { ballAnim = null; return; }
+
+    // Ball flies from bottom center up toward uprights
+    const bx = cx + Math.sin(ballAnim.dir||0) * W*0.15*t;
+    const by = H*0.78 - t*(H*0.68);
+    const alpha = Math.max(0, 1-t*0.8);
+
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle='#8B4513';
+    ctx.beginPath(); ctx.ellipse(bx,by,7,5,t*3,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.fillRect(bx-3,by-1,6,2);
+    ctx.globalAlpha = 1;
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    drawStadium();
+    drawUpright();
+    drawRadar();
+
+    if(phase === 'power'){
+      powerAngle += powerSpeed;
+      if(powerAngle > -Math.PI/2 + Math.PI*2) powerAngle = -Math.PI/2;
+      drawPowerNeedle();
+    } else if(phase === 'direction'){
+      dirAngle += dirSpeed;
+      if(dirAngle > Math.PI*0.7){ dirAngle = Math.PI*0.7; dirSpeed *= -1; }
+      if(dirAngle < -Math.PI*0.7){ dirAngle = -Math.PI*0.7; dirSpeed *= -1; }
+      drawDirectionNeedle();
+    } else if(phase === 'flying'){
+      drawBallAnimation();
+    }
+
+    // Attempt counter top-right
+    ctx.fillStyle='rgba(0,0,0,.6)'; ctx.beginPath(); ctx.roundRect(W-90,8,80,32,8); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font=`bold ${Math.round(W*0.032)}px monospace`; ctx.textAlign='center';
+    ctx.fillText(`${made}/${kicks}✓`,W-50,30);
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  function scoreKick(power100, dir){
+    // Good kick = power 40-85%, direction within ±0.3
+    const goodPow = power100 >= 38 && power100 <= 87;
+    const goodDir = Math.abs(dir) < 0.32;
+    return goodPow && goodDir;
+  }
+
+  function resolveKick(){
+    const power100 = Math.round(((lockedPower - (-Math.PI/2) + Math.PI*4) % (Math.PI*2)) / (Math.PI*2) * 100);
+    const good = scoreKick(power100, lockedDir);
+    if(good) made++;
+
+    phase = 'flying';
+    ballAnim = {t:0, good, dir: lockedDir*1.2};
+
+    // Flash result on upright
+    setTimeout(()=>{
+      ctx.clearRect(0,0,W,H);
+      drawStadium(); drawUpright(); drawRadar();
+      ctx.fillStyle = good ? 'rgba(79,206,138,.4)' : 'rgba(224,82,82,.35)';
+      ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#fff'; ctx.textAlign='center';
+      ctx.font=`bold ${Math.round(W*0.12)}px 'Courier New',monospace`;
+      ctx.fillText(good?'GOOD!':'NO GOOD',W/2,H/2);
+      if(good) score += 33;
+      kicks++;
+      document.getElementById('mgMade').textContent = made;
+      document.getElementById('mgAttempt').textContent = Math.min(kicks+1,3);
+    }, 600);
+
+    setTimeout(()=>{
+      if(kicks >= 3){
+        cancelAnimationFrame(raf);
+        onDone(score, score >= 66);
+      } else {
+        phase = 'power'; powerAngle = -Math.PI/2; lockedPower=null; lockedDir=null;
+        ballAnim = null;
+        document.getElementById('mgInstr').textContent = 'CLICK to stop the power meter';
+        raf = requestAnimationFrame(frame);
+      }
+    }, 1400);
+  }
+
+  canvas.addEventListener('click', ()=>{
+    if(phase === 'power'){
+      lockedPower = powerAngle;
+      phase = 'direction'; dirAngle = 0; dirSpeed = 0.035;
+      document.getElementById('mgInstr').textContent = 'CLICK when aimed straight!';
+    } else if(phase === 'direction'){
+      lockedDir = dirAngle;
+      phase = 'resolving';
+      resolveKick();
+    }
+  });
+
+  canvas.addEventListener('touchend', e=>{ e.preventDefault(); canvas.click(); }, {passive:false});
+
+  raf = requestAnimationFrame(frame);
+}
+
+function miniGameScramble(ov, b, opts, onDone){
+  const W = Math.min(600, window.innerWidth-40);
+  const H = Math.min(380, window.innerHeight-160);
+
+  ov.innerHTML = `
+    <div style="text-align:center;color:#fff;margin-bottom:12px;">
+      <div style="font-family:var(--co);font-size:11px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;">QB Scramble</div>
+      <div style="font-family:var(--co);font-size:20px;">Dodge defenders · gain yards</div>
+    </div>
+    <canvas id="mgCanvas" width="${W}" height="${H}" style="border-radius:16px;display:block;touch-action:none;"></canvas>
+    <div style="margin-top:10px;font-family:var(--co);font-size:13px;color:var(--t3);">
+      Mouse / touch to move · <span id="mgYards">0</span> yards gained
+    </div>`;
+
+  const canvas = document.getElementById('mgCanvas');
+  const ctx = canvas.getContext('2d');
+
+  let yards = 0;
+  let running = true;
+  let raf;
+  let mouseX = W*0.15, mouseY = H/2;
+  let qb = {x: W*0.15, y: H/2};
+  let defs = [];
+  let firstDownLine = W*0.55;
+  let endZone = W*0.92;
+  let gameTime = 0;
+  let maxTime = 300; // frames at 24fps = ~12 seconds
+
+  // Spawn defenders
+  function spawnDef(){
+    defs.push({
+      x: W*0.6 + Math.random()*W*0.3,
+      y: Math.random()*H*0.8+H*0.1,
+      vx: -(1.2 + Math.random()*1.2 + yards*0.01),
+      vy: (Math.random()-0.5)*1.5,
+      r: 16
+    });
+  }
+  for(let i=0;i<3;i++) spawnDef();
+
+  function getMouse(e){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W/rect.width, scaleY = H/rect.height;
+    if(e.touches){
+      mouseX = (e.touches[0].clientX - rect.left) * scaleX;
+      mouseY = (e.touches[0].clientY - rect.top) * scaleY;
+    } else {
+      mouseX = (e.clientX - rect.left) * scaleX;
+      mouseY = (e.clientY - rect.top) * scaleY;
+    }
+  }
+  canvas.addEventListener('mousemove', getMouse);
+  canvas.addEventListener('touchmove', e=>{e.preventDefault();getMouse(e);}, {passive:false});
+
+  let lastT = 0;
+  function frame(ts){
+    if(ts - lastT < 1000/36){ raf=requestAnimationFrame(frame); return; }
+    lastT = ts;
+    if(!running){ return; }
+    gameTime++;
+
+    // Move QB toward mouse
+    qb.x += (mouseX - qb.x) * 0.18;
+    qb.y += (mouseY - qb.y) * 0.18;
+    qb.x = Math.max(12, Math.min(W-12, qb.x));
+    qb.y = Math.max(12, Math.min(H-12, qb.y));
+
+    // Count yards
+    if(qb.x > W*0.2) yards = Math.max(yards, Math.round((qb.x - W*0.15) / W * 50));
+
+    // Move defenders
+    defs.forEach(d=>{
+      d.x += d.vx; d.y += d.vy;
+      d.vy += (qb.y - d.y) * 0.008; // home in
+      d.vy *= 0.95;
+      if(d.x < -30){ d.x = W*0.95 + Math.random()*50; d.y=Math.random()*H*0.8+H*0.1; }
+    });
+
+    // Spawn more as time goes on
+    if(gameTime % 80 === 0 && defs.length < 8) spawnDef();
+
+    // Draw
+    ctx.clearRect(0,0,W,H);
+    // Field
+    const grad = ctx.createLinearGradient(0,0,W,0);
+    grad.addColorStop(0,'#1a5c1a'); grad.addColorStop(1,'#143d14');
+    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+    // Yard lines
+    ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth=1;
+    for(let x=W*0.2;x<W;x+=W*0.1){ ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke(); }
+    // First down line
+    ctx.strokeStyle = 'rgba(255,220,0,.6)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(firstDownLine,0); ctx.lineTo(firstDownLine,H); ctx.stroke();
+    // End zone
+    ctx.fillStyle = 'rgba(79,206,138,.15)';
+    ctx.fillRect(endZone, 0, W-endZone, H);
+    ctx.strokeStyle = 'rgba(79,206,138,.6)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(endZone,0); ctx.lineTo(endZone,H); ctx.stroke();
+
+    // Progress bar
+    const prog = Math.min(1, gameTime/maxTime);
+    ctx.fillStyle = 'rgba(0,0,0,.5)';
+    ctx.fillRect(0, H-8, W, 8);
+    ctx.fillStyle = prog > 0.7 ? '#e05252' : prog > 0.4 ? '#E8A020' : '#4fce8a';
+    ctx.fillRect(0, H-8, W*(1-prog), 8);
+
+    // Defenders
+    defs.forEach(d=>{
+      ctx.fillStyle = '#cc2020';
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.font=`bold ${Math.round(d.r*0.9)}px monospace`; ctx.textAlign='center';
+      ctx.fillText('D',d.x,d.y+5);
+    });
+
+    // QB
+    ctx.fillStyle = 'var(--tc)' || '#E8A020';
+    ctx.beginPath(); ctx.arc(qb.x,qb.y,14,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#000'; ctx.font='bold 12px monospace'; ctx.textAlign='center';
+    ctx.fillText('QB',qb.x,qb.y+4);
+
+    // Yards label
+    ctx.fillStyle='rgba(0,0,0,.7)'; ctx.beginPath(); ctx.roundRect(10,10,130,30,6); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font=`bold ${Math.round(W*0.036)}px 'Courier New',monospace`;
+    ctx.textAlign='left'; ctx.fillText(`${yards} YDS`, 20, 31);
+
+    // Collision check
+    const hit = defs.some(d=>Math.hypot(qb.x-d.x, qb.y-d.y) < d.r+12);
+    // TD check
+    const td = qb.x >= endZone - 10;
+
+    if(hit || gameTime >= maxTime || td){
+      running = false;
+      cancelAnimationFrame(raf);
+      // Flash
+      ctx.fillStyle = td?'rgba(79,206,138,.4)':hit?'rgba(224,82,82,.4)':'rgba(232,160,32,.2)';
+      ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#fff'; ctx.textAlign='center';
+      ctx.font = `bold ${Math.round(W*0.1)}px 'Courier New',monospace`;
+      ctx.fillText(td?'TOUCHDOWN!':hit?'TACKLED!':'TIME!', W/2, H/2);
+      if(td) yards = 50;
+      setTimeout(()=>{
+        const finalScore = Math.min(100, Math.round(yards*2));
+        onDone(finalScore, finalScore >= 40);
+      }, 900);
+      return;
+    }
+
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+}
+
+// ══════════════════════════════════════════
+//  MINI-GAME 3: HAIL MARY LAUNCH
+//  Drag to aim, release to throw, curve ball
+// ══════════════════════════════════════════
+function miniGameHailMary(ov, b, opts, onDone){
+  const W = Math.min(600, window.innerWidth-40);
+  const H = Math.min(380, window.innerHeight-160);
+
+  ov.innerHTML = `
+    <div style="text-align:center;color:#fff;margin-bottom:12px;">
+      <div style="font-family:var(--co);font-size:11px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;">Hail Mary</div>
+      <div style="font-family:var(--co);font-size:20px;">Drag &amp; release · hit the receiver</div>
+    </div>
+    <canvas id="mgCanvas" width="${W}" height="${H}" style="border-radius:16px;display:block;cursor:crosshair;touch-action:none;"></canvas>
+    <div style="margin-top:10px;font-family:var(--co);font-size:13px;color:var(--t3);">
+      Throws: <span id="mgThrows">3</span> · Score: <span id="mgHits">0</span>/3
+    </div>`;
+
+  const canvas = document.getElementById('mgCanvas');
+  const ctx = canvas.getContext('2d');
+
+  let throwsLeft = 3, hits = 0, score = 0;
+  let dragging = false, dragStart = null, dragCur = null;
+  let ball = null, raf;
+  let receivers = [];
+  let defenders = [];
+  let gamePhase = 'aim'; // aim -> flying -> result
+
+  function resetPlay(){
+    receivers = [];
+    defenders = [];
+    // 1-3 receivers at random positions on right side
+    const count = 1 + Math.floor(Math.random()*2);
+    for(let i=0;i<count;i++){
+      receivers.push({
+        x: W*0.6+Math.random()*W*0.28, y: H*0.2+Math.random()*H*0.6,
+        vx:(Math.random()-0.5)*1.2, vy:(Math.random()-0.5)*1.2, r:18
+      });
+    }
+    for(let i=0;i<2;i++){
+      defenders.push({
+        x: W*0.5+Math.random()*W*0.4, y: H*0.2+Math.random()*H*0.6,
+        r:20
+      });
+    }
+    ball = null; gamePhase = 'aim'; dragging = false;
+  }
+  resetPlay();
+
+  const qbPos = {x: W*0.1, y: H*0.6};
+
+  function getPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const sx=W/rect.width, sy=H/rect.height;
+    if(e.touches) return {x:(e.touches[0].clientX-rect.left)*sx, y:(e.touches[0].clientY-rect.top)*sy};
+    return {x:(e.clientX-rect.left)*sx, y:(e.clientY-rect.top)*sy};
+  }
+
+  canvas.addEventListener('mousedown',  e=>{if(gamePhase==='aim'){dragging=true;dragStart=getPos(e);dragCur=dragStart;}});
+  canvas.addEventListener('mousemove',  e=>{if(dragging)dragCur=getPos(e);});
+  canvas.addEventListener('mouseup',    e=>{if(dragging&&gamePhase==='aim'){dragging=false;launchBall();}});
+  canvas.addEventListener('touchstart', e=>{e.preventDefault();if(gamePhase==='aim'){dragging=true;dragStart=getPos(e);dragCur=dragStart;}},{passive:false});
+  canvas.addEventListener('touchmove',  e=>{e.preventDefault();if(dragging)dragCur=getPos(e);}  ,{passive:false});
+  canvas.addEventListener('touchend',   e=>{e.preventDefault();if(dragging&&gamePhase==='aim'){dragging=false;launchBall();}},{passive:false});
+
+  function launchBall(){
+    if(!dragStart||!dragCur) return;
+    const dx = dragStart.x - dragCur.x; // pull back to go forward
+    const dy = dragStart.y - dragCur.y;
+    const spd = Math.min(Math.hypot(dx,dy)*0.14, 18);
+    ball = {x:qbPos.x+10, y:qbPos.y, vx:spd*(dx/Math.hypot(dx,dy)||1), vy:spd*(dy/Math.hypot(dx,dy)||0)*0.7, trail:[]};
+    gamePhase = 'flying';
+  }
+
+  let lastT = 0;
+  function frame(ts){
+    if(ts-lastT<1000/36){raf=requestAnimationFrame(frame);return;} lastT=ts;
+
+    ctx.clearRect(0,0,W,H);
+    // Night sky / stadium
+    const sky = ctx.createLinearGradient(0,0,0,H*0.4);
+    sky.addColorStop(0,'#050d08'); sky.addColorStop(1,'#0a1f0a');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H*0.4);
+    // Stadium lights
+    [[W*0.1,H*0.05],[W*0.9,H*0.05],[W*0.5,H*0.02]].forEach(([lx,ly])=>{
+      const rad=ctx.createRadialGradient(lx,ly,0,lx,ly,80);
+      rad.addColorStop(0,'rgba(255,255,200,.25)'); rad.addColorStop(1,'transparent');
+      ctx.fillStyle=rad; ctx.fillRect(0,0,W,H);
+    });
+    // Field
+    const fg=ctx.createLinearGradient(0,H*0.4,0,H);
+    fg.addColorStop(0,'#1a5c1a'); fg.addColorStop(1,'#113811');
+    ctx.fillStyle=fg; ctx.fillRect(0,H*0.4,W,H*0.6);
+    // Yard lines
+    ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=1;
+    for(let x=W*0.1;x<W;x+=W*0.15){ctx.beginPath();ctx.moveTo(x,H*0.4);ctx.lineTo(x,H);ctx.stroke();}
+
+    // Receivers (moving)
+    receivers.forEach(r=>{
+      r.x+=r.vx; r.y+=r.vy;
+      if(r.x<W*0.45||r.x>W*0.98){r.vx*=-1;}
+      if(r.y<H*0.1||r.y>H*0.9){r.vy*=-1;}
+      ctx.fillStyle='#4fce8a'; ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#000'; ctx.font=`bold 11px monospace`; ctx.textAlign='center';
+      ctx.fillText('WR',r.x,r.y+4);
+      // Target ring
+      ctx.strokeStyle='rgba(79,206,138,.4)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(r.x,r.y,r.r+6,0,Math.PI*2); ctx.stroke();
+    });
+    // Defenders
+    defenders.forEach(d=>{
+      ctx.fillStyle='#cc2020'; ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.font=`bold 11px monospace`; ctx.textAlign='center';
+      ctx.fillText('CB',d.x,d.y+4);
+    });
+    // QB
+    ctx.fillStyle='#E8A020'; ctx.beginPath(); ctx.arc(qbPos.x,qbPos.y,16,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#000'; ctx.font=`bold 11px monospace`; ctx.textAlign='center';
+    ctx.fillText('QB',qbPos.x,qbPos.y+4);
+
+    // Aim guide
+    if(dragging && dragStart && dragCur){
+      const dx=dragStart.x-dragCur.x, dy=dragStart.y-dragCur.y;
+      ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=2; ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.moveTo(qbPos.x,qbPos.y); ctx.lineTo(qbPos.x+dx*3, qbPos.y+dy*3); ctx.stroke();
+      ctx.setLineDash([]);
+      // Power indicator
+      const pow=Math.min(Math.hypot(dx,dy)/80,1);
+      ctx.fillStyle=`hsl(${120-pow*120},80%,55%)`; ctx.beginPath();
+      ctx.arc(dragCur.x,dragCur.y,8,0,Math.PI*2); ctx.fill();
+    }
+
+    // Ball physics
+    if(ball && gamePhase==='flying'){
+      ball.trail.push({x:ball.x,y:ball.y});
+      if(ball.trail.length>12) ball.trail.shift();
+      ball.x+=ball.vx; ball.y+=ball.vy; ball.vy+=0.22;
+      // Trail
+      ball.trail.forEach((t,i)=>{
+        ctx.globalAlpha=(i/ball.trail.length)*0.5;
+        ctx.fillStyle='#8B4513'; ctx.beginPath();
+        ctx.arc(t.x,t.y,(i/ball.trail.length)*5,0,Math.PI*2); ctx.fill();
+      });
+      ctx.globalAlpha=1;
+      // Ball
+      ctx.fillStyle='#8B4513'; ctx.beginPath(); ctx.arc(ball.x,ball.y,6,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.fillRect(ball.x-3,ball.y-1,6,2);
+
+      // Hit check - receivers
+      let caught = false;
+      receivers.forEach(r=>{
+        if(!caught && Math.hypot(ball.x-r.x,ball.y-r.y)<r.r+6){
+          caught=true; hits++;
+          // Check defender intercept
+          const intercepted = defenders.some(d=>Math.hypot(r.x-d.x,r.y-d.y)<d.r+r.r);
+          flashResult(intercepted?'INTERCEPTED!':'CAUGHT!', intercepted?'#e05252':'#4fce8a', !intercepted);
+        }
+      });
+      // Miss
+      if(!caught && (ball.x>W+20||ball.y>H+20||ball.x<-20)){
+        flashResult('INCOMPLETE', '#E8A020', false);
+      }
+    }
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  function flashResult(txt, col, isHit){
+    gamePhase = 'result';
+    cancelAnimationFrame(raf);
+    ctx.clearRect(0,0,W,H);
+    // redraw field briefly
+    ctx.fillStyle='rgba(0,0,0,.7)'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=col; ctx.font=`bold ${Math.round(W*0.1)}px 'Courier New',monospace`;
+    ctx.textAlign='center'; ctx.fillText(txt, W/2, H/2);
+    if(isHit) score+=33;
+    throwsLeft--;
+    document.getElementById('mgThrows').textContent=throwsLeft;
+    document.getElementById('mgHits').textContent=hits+'/3';
+    setTimeout(()=>{
+      if(throwsLeft<=0){
+        setTimeout(()=>onDone(score, score>=66), 300);
+      } else {
+        resetPlay();
+        raf=requestAnimationFrame(frame);
+      }
+    }, 900);
+  }
+
+  raf = requestAnimationFrame(frame);
+}
+
+// ══════════════════════════════════════════
+//  MINI-GAME 4: PRESS CONFERENCE BLITZ
+//  Tap the right answer before clock runs out
+// ══════════════════════════════════════════
+function miniGamePressQuiz(ov, b, opts, onDone){
+  const questions = [
+    {q:`Reporter: "What's your win probability against a ranked opponent this week?"`, a:['Stay humble, focus on execution','We will win by 21, no doubt','We prefer not to look at rankings','Its a 50/50 game'], correct:0},
+    {q:`Reporter: "A booster said your recruiting class is underperforming. Response?"`, a:['We have 3 needles nobody else sees','Fire the booster','We\'re building brick by brick','No comment'], correct:0},
+    {q:`Reporter: "Your QB just entered the portal — your reaction?"`, a:['Respect his decision, next man up','He\'s a quitter','We\'ll sue the portal','Shocked and devastated publicly'], correct:0},
+    {q:`Reporter: "How do you handle NIL disputes in your locker room?"`, a:['Transparent structure, all players know the deal','NIL is for transfers only','We don\'t discuss money','Deny all disputes'], correct:0},
+    {q:`Reporter: "Season record is 3-4. Is your job safe?"`, a:['I answer to winning, not noise','I might resign','AD hasn\'t called','I\'m worried too'], correct:0},
+    {q:`Booster: "My $5M was supposed to buy better results. Explain yourself."`, a:['Point to recruiting pipeline and upcoming schedule','Blame the offensive coordinator','Ask for more money','Leave the meeting'], correct:0},
+    {q:`Reporter: "You just lost to a 2-star opponent. Walk us through it."`, a:['Own it, speak to corrections','They cheated','Weather was the factor','Refuse to address it'], correct:0},
+  ];
+
+  const W = Math.min(600, window.innerWidth-40);
+  const H = Math.min(420, window.innerHeight-160);
+
+  ov.innerHTML = `
+    <div style="text-align:center;color:#fff;margin-bottom:12px;">
+      <div style="font-family:var(--co);font-size:11px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;">Press Conference Blitz</div>
+      <div style="font-family:var(--co);font-size:20px;">Answer fast · stay composed</div>
+    </div>
+    <div id="mgQuizBox" style="background:rgba(10,16,11,.98);border:1px solid var(--gb);border-radius:16px;
+      width:${W}px;max-width:100%;overflow:hidden;">
+    </div>
+    <div style="margin-top:10px;font-family:var(--co);font-size:13px;color:var(--t3);">
+      Score: <span id="mgQScore">0</span> · Q <span id="mgQNum">1</span>/5
+    </div>`;
+
+  let qIdx = 0, score = 0, totalQs = 5;
+  const shuffled = [...questions].sort(()=>Math.random()-.5).slice(0,totalQs);
+  let timerInterval = null;
+
+  function showQ(){
+    if(qIdx >= totalQs){
+      clearInterval(timerInterval);
+      setTimeout(()=>onDone(Math.round(score/totalQs*100), score>=Math.ceil(totalQs*0.6)), 300);
+      return;
+    }
+    const q = shuffled[qIdx];
+    const shuffledOpts = q.a.map((a,i)=>({a,correct:i===q.correct})).sort(()=>Math.random()-.5);
+    let timeLeft = 8;
+    clearInterval(timerInterval);
+
+    document.getElementById('mgQuizBox').innerHTML = `
+      <div style="padding:18px 20px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div style="font-family:var(--co);font-size:10px;color:var(--t3);letter-spacing:1px;">QUESTION ${qIdx+1}/${totalQs}</div>
+          <div style="font-family:var(--co);font-size:18px;" id="qTimer" style="color:#4fce8a;">8s</div>
+        </div>
+        <div style="height:4px;background:rgba(255,255,255,.06);border-radius:var(--rpill);margin-bottom:14px;">
+          <div id="qTimerBar" style="height:100%;width:100%;border-radius:var(--rpill);background:#4fce8a;transition:width .1s linear;"></div>
+        </div>
+        <div style="font-size:14px;color:var(--t1);line-height:1.5;margin-bottom:16px;font-style:italic;">${q.q}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid var(--gb);">
+        ${shuffledOpts.map((opt,i)=>`
+          <div id="qopt${i}" onclick="window._quizAnswer(${opt.correct?1:0},${i})"
+            style="padding:13px 20px;cursor:pointer;border-bottom:1px solid var(--gb);
+            font-size:13px;color:var(--t2);transition:all .15s;display:flex;align-items:center;gap:10px;">
+            <div style="font-family:var(--co);font-size:11px;width:22px;height:22px;border-radius:50%;
+              background:var(--surf);border:1px solid var(--gb);display:flex;align-items:center;justify-content:center;
+              color:var(--t3);flex-shrink:0;">${String.fromCharCode(65+i)}</div>
+            <div>${opt.a}</div>
+          </div>`).join('')}
+      </div>`;
+
+    timerInterval = setInterval(()=>{
+      timeLeft -= 0.1;
+      const pct = (timeLeft/8)*100;
+      const bar = document.getElementById('qTimerBar');
+      const timer = document.getElementById('qTimer');
+      if(bar) bar.style.width = pct+'%';
+      if(bar) bar.style.background = timeLeft<3?'#e05252':timeLeft<5?'#E8A020':'#4fce8a';
+      if(timer) { timer.textContent = Math.ceil(timeLeft)+'s'; timer.style.color=timeLeft<3?'#e05252':timeLeft<5?'var(--gold)':'#4fce8a'; }
+      if(timeLeft <= 0){
+        clearInterval(timerInterval);
+        window._quizAnswer(0, -1); // timeout = wrong
+      }
+    }, 100);
+  }
+
+  window._quizAnswer = function(correct, idx){
+    clearInterval(timerInterval);
+    if(correct){ score++; document.getElementById('mgQScore').textContent=score; }
+    // Color the buttons
+    if(idx >= 0){
+      const el = document.getElementById('qopt'+idx);
+      if(el) el.style.background = correct?'rgba(58,158,104,.25)':'rgba(224,82,82,.15)';
+    }
+    qIdx++;
+    document.getElementById('mgQNum').textContent = Math.min(qIdx+1, totalQs);
+    setTimeout(showQ, 700);
+  };
+
+  showQ();
+  // cleanup handled inline
+}
+
+// ══════════════════════════════════════════
+//  MINI-GAME 5: NIL MEETING
+//  Timed clicking game — build rapport fast
+// ══════════════════════════════════════════
+function miniGameNILMeeting(ov, b, opts, onDone){
+  const W = Math.min(560, window.innerWidth-40);
+  const H = Math.min(360, window.innerHeight-160);
+  const threshold = opts.threshold || 60;
+
+  ov.innerHTML = `
+    <div style="text-align:center;color:#fff;margin-bottom:12px;">
+      <div style="font-family:var(--co);font-size:11px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;">NIL Meeting · ${b.name}</div>
+      <div style="font-family:var(--co);font-size:20px;">Hit the talking points before time runs out</div>
+    </div>
+    <canvas id="mgCanvas" width="${W}" height="${H}" style="border-radius:16px;display:block;cursor:pointer;touch-action:manipulation;"></canvas>
+    <div style="margin-top:10px;font-family:var(--co);font-size:13px;color:var(--t3);">
+      Need <span style="color:var(--gold);">${threshold}</span> points · Score: <span id="mgNilScore">0</span>
+    </div>`;
+
+  const canvas = document.getElementById('mgCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const TOPICS = ['Roster','Wins','NIL Plan','Recruiting','Culture','Vision','Loyalty','Results','Trust','Pipeline'];
+  const BAD = ['Portal?','Drama','Late','Excuses'];
+
+  let score = 0, timeLeft = 12, raf, timerInt;
+  let targets = [];
+  let floaters = [];
+
+  function spawnTarget(){
+    const isBad = Math.random()<0.2;
+    const txt = isBad ? BAD[Math.floor(Math.random()*BAD.length)] : TOPICS[Math.floor(Math.random()*TOPICS.length)];
+    const r = isBad ? 28 : 32;
+    targets.push({
+      x: r + Math.random()*(W-r*2), y: -r*2,
+      vy: 1.2 + Math.random()*1.8,
+      r, txt, isBad,
+      life: 1
+    });
+  }
+
+  function drawScene(){
+    ctx.clearRect(0,0,W,H);
+    // Background — boardroom
+    const bg = ctx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,'#0a0f12'); bg.addColorStop(1,'#0f1a14');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    // Table
+    ctx.fillStyle='#1a1208'; ctx.beginPath();
+    ctx.ellipse(W/2,H*0.85,W*0.45,H*0.12,0,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#2a2010'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.ellipse(W/2,H*0.85,W*0.45,H*0.12,0,0,Math.PI*2); ctx.stroke();
+    // Booster silhouette
+    ctx.fillStyle='rgba(255,255,255,.06)';
+    ctx.beginPath(); ctx.ellipse(W/2,H*0.68,30,35,0,0,Math.PI*2); ctx.fill(); // head
+    ctx.fillStyle='rgba(255,255,255,.04)';
+    ctx.beginPath(); ctx.ellipse(W/2,H*0.82,50,28,0,0,Math.PI*2); ctx.fill(); // body
+
+    // Time bar
+    ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(0,0,W,8);
+    ctx.fillStyle=timeLeft<4?'#e05252':timeLeft<7?'#E8A020':'#4fce8a';
+    ctx.fillRect(0,0,W*(timeLeft/12),8);
+
+    // Targets
+    targets.forEach(t=>{
+      t.y += t.vy;
+      const alive = t.y < H+t.r*2;
+      if(!alive){ t.dead=true; return; }
+      const grad = ctx.createRadialGradient(t.x,t.y,0,t.x,t.y,t.r);
+      grad.addColorStop(0, t.isBad?'rgba(224,82,82,.9)':'rgba(79,206,138,.85)');
+      grad.addColorStop(1, t.isBad?'rgba(160,20,20,.7)':'rgba(30,100,60,.7)');
+      ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle=t.isBad?'rgba(224,82,82,.6)':'rgba(79,206,138,.6)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(t.x,t.y,t.r+3,0,Math.PI*2); ctx.stroke();
+      ctx.fillStyle='#fff'; ctx.font=`bold ${Math.round(t.r*0.45)}px 'Courier New',monospace`;
+      ctx.textAlign='center'; ctx.fillText(t.txt,t.x,t.y+5);
+    });
+    targets = targets.filter(t=>!t.dead);
+
+    // Floaters (click feedback)
+    floaters.forEach(f=>{ f.y-=1.5; f.life-=0.06; });
+    floaters = floaters.filter(f=>f.life>0);
+    floaters.forEach(f=>{
+      ctx.globalAlpha=f.life;
+      ctx.fillStyle=f.col; ctx.font=`bold ${Math.round(W*0.045)}px 'Courier New',monospace`;
+      ctx.textAlign='center'; ctx.fillText(f.txt,f.x,f.y);
+      ctx.globalAlpha=1;
+    });
+
+    // Score display
+    ctx.fillStyle='rgba(0,0,0,.7)'; ctx.beginPath(); ctx.roundRect(10,12,140,30,6); ctx.fill();
+    ctx.fillStyle= score>=threshold?'#4fce8a':'#fff';
+    ctx.font=`bold ${Math.round(W*0.04)}px 'Courier New',monospace`;
+    ctx.textAlign='left'; ctx.fillText(`${score}/${threshold} pts`,18,33);
+  }
+
+  let spawnTimer = 0;
+  function frame(){
+    drawScene();
+    spawnTimer++;
+    if(spawnTimer % 40 === 0) spawnTarget();
+    raf = requestAnimationFrame(frame);
+  }
+
+  timerInt = setInterval(()=>{
+    timeLeft -= 0.1;
+    if(timeLeft <= 0){
+      clearInterval(timerInt); cancelAnimationFrame(raf);
+      const passed = score >= threshold;
+      setTimeout(()=>onDone(Math.min(100,score), passed), 200);
+    }
+  },100);
+
+  canvas.addEventListener('click', e=>{
+    const rect = canvas.getBoundingClientRect();
+    const sx=W/rect.width,sy=H/rect.height;
+    const cx=(e.clientX-rect.left)*sx, cy=(e.clientY-rect.top)*sy;
+    let hit=false;
+    targets.forEach(t=>{
+      if(!hit && Math.hypot(cx-t.x,cy-t.y)<t.r+8){
+        hit=true; t.dead=true;
+        if(t.isBad){
+          score=Math.max(0,score-5);
+          floaters.push({x:t.x,y:t.y,txt:'-5',col:'#e05252',life:1});
+        } else {
+          score+=10;
+          floaters.push({x:t.x,y:t.y,txt:'+10',col:'#4fce8a',life:1});
+        }
+        document.getElementById('mgNilScore').textContent=score;
+      }
+    });
+  });
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();canvas.dispatchEvent(new MouseEvent('click',{clientX:e.touches[0].clientX,clientY:e.touches[0].clientY}));},{passive:false});
+
+  spawnTarget(); spawnTarget();
+  raf = requestAnimationFrame(frame);
+}
+
 const PITCH_SCENARIOS = [
   { id:'wins', label:'Pitch Your Record', icon:'🏆',
     prompts:[
@@ -3374,10 +4497,11 @@ const PITCH_SCENARIOS = [
 ];
 
 function renderBoosters(){
+  const gameLabels = ['🏈 Field Goal','🏃 QB Scramble','🎯 Hail Mary','⚡ Press Blitz'];
   document.getElementById('dw').innerHTML=`
     <div class="page-header">
       <div class="page-title">NIL <span class="page-title-accent">Collective</span></div>
-      <div class="page-sub">Build relationships · pitch boosters · unlock funding</div>
+      <div class="page-sub">Click a booster to play a mini-game · win to build the relationship · unlock NIL funding</div>
     </div>
     <div class="booster-war-room">
       ${BOOSTERS.map(b=>{
@@ -3385,7 +4509,12 @@ function renderBoosters(){
         const relFillCls = b.rel>=70?'rg':b.rel>=45?'ro':'rb';
         const tier = b.rel>=80?'ALLIANCE':b.rel>=60?'FRIENDLY':b.rel>=40?'NEUTRAL':b.rel>=20?'SKEPTICAL':'HOSTILE';
         const tierCol = b.rel>=80?'#4fce8a':b.rel>=60?'var(--tc)':b.rel>=40?'var(--gold)':b.rel>=20?'#e8a040':'#e07070';
-        return `<div class="booster-card-full" onclick="openBoosterPitch('${b.name.replace(/'/g,"\\'")}')">
+        const onCooldown = !canPitchBooster(b);
+        const nilReq = nilRequests[b.name];
+        const nilPending = nilReq && nilReq.pending;
+        const randomGame = gameLabels[Math.floor(Math.random()*gameLabels.length)];
+        const ne = b.name.replace(/'/g,"\\'");
+        return `<div class="booster-card-full">
           <div class="bcf-header">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
               <div>
@@ -3402,115 +4531,29 @@ function renderBoosters(){
               <div class="bcf-nil-lbl">NIL Pool</div>
             </div>
             <div class="bcf-rel-bar"><div class="bcf-rel-fill ${relFillCls}" style="width:${b.rel}%;"></div></div>
-            <div class="bcf-rel-label" style="margin-bottom:12px;"><span>Relationship</span><span style="color:${relCol};">${b.rel}%</span></div>
+            <div class="bcf-rel-label" style="margin-bottom:10px;"><span>Relationship</span><span style="color:${relCol};">${b.rel}%</span></div>
             <div class="bcf-mood">${b.mood}</div>
             <div class="bcf-wants">${b.wants.map(w=>`<div class="bcf-want">${w}</div>`).join('')}</div>
-            <button class="bcf-pitch-btn" onclick="event.stopPropagation();openBoosterPitch('${b.name.replace(/'/g,"\\'")}')">
-              ${b.rel>=80?'☕ Check In':'🎯 Pitch Meeting'} →
+            <button class="bcf-pitch-btn" ${onCooldown?'disabled style="opacity:.45;cursor:not-allowed;"':''}
+              onclick="openBoosterPitch('${ne}')">
+              ${onCooldown?'⏳ Met This Week':randomGame+' →'}
             </button>
+            ${b.rel>=50?`
+            <button style="width:100%;margin-top:7px;padding:11px;border-radius:var(--r16);
+              border:1px solid var(--gold-g);background:var(--gold-s);color:var(--gold);
+              font-family:var(--co);font-size:12px;cursor:pointer;transition:all .2s;"
+              onclick="openNILRequest('${ne}')">
+              ${nilPending?'⏳ NIL Request Pending':'💰 Request NIL Meeting →'}
+            </button>`:`
+            <div style="margin-top:7px;padding:8px 10px;border-radius:var(--r10);background:var(--surf);
+              font-size:11px;color:var(--t3);text-align:center;">
+              Build to 50+ relationship to unlock NIL meetings
+            </div>`}
           </div>
         </div>`;
       }).join('')}
     </div>`;
 }
-
-function openBoosterPitch(name){
-  const b = BOOSTERS.find(x=>x.name===name);
-  if(!b) return;
-  S('modal');
-
-  const scenario = PITCH_SCENARIOS[Math.floor(Math.random()*PITCH_SCENARIOS.length)];
-  const prompt = pick(scenario.prompts);
-  const relCol = b.rel>=70?'#4fce8a':b.rel>=45?'var(--gold)':'#e07070';
-
-  const ov = document.createElement('div');
-  ov.className = 'pitch-overlay';
-  ov.id = 'pitchOverlay';
-  ov.innerHTML = `
-    <div class="pitch-panel">
-      <div class="pitch-header">
-        <div class="pitch-avatar">🤵</div>
-        <div class="pitch-header-info">
-          <div class="pitch-name">${b.name}</div>
-          <div class="pitch-subtitle">${b.type} · ${scenario.label}</div>
-        </div>
-        <button onclick="closePitch()" style="background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:4px;">✕</button>
-      </div>
-      <div class="pitch-rel-meter">
-        <div class="pitch-rel-top">
-          <span class="pitch-rel-lbl">Relationship</span>
-          <span class="pitch-rel-num" style="color:${relCol};" id="pitchRelNum">${b.rel}/100</span>
-        </div>
-        <div class="pitch-rel-track">
-          <div class="pitch-rel-fill" id="pitchRelFill"
-            style="width:${b.rel}%;background:${relCol};"></div>
-        </div>
-      </div>
-      <div class="pitch-body">
-        <div class="pitch-prompt">${scenario.icon} "${prompt}"</div>
-        <div class="pitch-options" id="pitchOptions">
-          ${scenario.options.map((opt,i)=>`
-            <div class="pitch-opt ${opt.type}" onclick="doPitch(${i})">
-              <div class="pitch-opt-icon">${opt.icon}</div>
-              <div class="pitch-opt-text">
-                <div class="pitch-opt-title">${opt.label}</div>
-                <div class="pitch-opt-desc">${opt.desc}</div>
-              </div>
-              <div class="pitch-opt-effect" style="background:${opt.type==='good'?'var(--ok-s)':opt.type==='risky'?'var(--warn-s)':'var(--danger-s)'};color:${opt.type==='good'?'#5fda90':opt.type==='risky'?'var(--gold)':'#f08080'};border:1px solid ${opt.type==='good'?'rgba(58,158,104,.25)':opt.type==='risky'?'rgba(212,134,10,.25)':'rgba(224,82,82,.25)'};">
-                ${opt.effect}
-              </div>
-            </div>`).join('')}
-        </div>
-        <div id="pitchResult" style="display:none;"></div>
-      </div>
-    </div>`;
-
-  document.body.appendChild(ov);
-  window._activePitch = {b, scenario};
-}
-
-function doPitch(optIdx){
-  const {b, scenario} = window._activePitch;
-  const opt = scenario.options[optIdx];
-  const result = opt.fn(b);
-
-  // Update the meter
-  const relCol = b.rel>=70?'#4fce8a':b.rel>=45?'var(--gold)':'#e07070';
-  const fill = document.getElementById('pitchRelFill');
-  const num = document.getElementById('pitchRelNum');
-  if(fill){ fill.style.width=b.rel+'%'; fill.style.background=relCol; }
-  if(num){ num.textContent=b.rel+'/100'; num.style.color=relCol; }
-
-  // Hide options, show result
-  const opts = document.getElementById('pitchOptions');
-  const res = document.getElementById('pitchResult');
-  if(opts) opts.style.display='none';
-  if(res){
-    const isGood = result.delta > 0;
-    res.style.display='block';
-    res.innerHTML = `
-      <div style="text-align:center;padding:16px;border-radius:var(--r16);
-        background:${isGood?'var(--ok-s)':result.delta<-8?'var(--danger-s)':'var(--warn-s)'};
-        border:1px solid ${isGood?'rgba(58,158,104,.3)':result.delta<-8?'rgba(224,82,82,.3)':'rgba(212,134,10,.3)'};
-        animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;">
-        <div style="font-size:36px;margin-bottom:8px;">${isGood?'🤝':'😤'}</div>
-        <div style="font-family:var(--co);font-size:16px;color:#fff;margin-bottom:6px;">
-          ${result.delta>0?'+'+result.delta:result.delta} Relationship
-        </div>
-        <div style="font-size:13px;color:var(--t2);margin-bottom:16px;">${result.txt}</div>
-        <button class="mb-p" onclick="closePitch();renderBoosters();">Done</button>
-      </div>`;
-    if(isGood) S('goodPlay'); else S('bust');
-  }
-}
-
-function closePitch(){
-  const ov = document.getElementById('pitchOverlay');
-  if(ov){ ov.style.opacity='0'; ov.style.transition='opacity .25s'; setTimeout(()=>ov.remove(),260); }
-  S('dismiss');
-}
-
-// ═══════════════════════════════════════════════
 //  PORTAL
 // ═══════════════════════════════════════════════
 function renderPortal(){
@@ -3540,10 +4583,12 @@ function renderPortal(){
 // ═══════════════════════════════════════════════
 function advWeek(){
   GS.week++;
+  // Sync schedule: mark next game as current week
+  const _nextGame = SCHEDULE.find(g=>!g.result); if(_nextGame) _nextGame.wk = GS.week;
   APused={calls:0,visits:0,officials:0,nil:0};
   scoutPts=Math.min(100,scoutPts+20);
   AP.officials=1;
-  document.getElementById('wkChip').textContent='Week '+GS.week;
+  document.getElementById('wkChip').textContent='Wk '+GS.week+'/15';
   runRivalPressure();
   updateScoutUI();
   processNILContracts();
@@ -3755,7 +4800,7 @@ function loadProfile(idx){
     l.src=logoUrl(school);l.alt=school.short;
     document.getElementById('tcName').textContent=school.short;
     document.getElementById('tcSub').textContent=GS.coachName+' · Head Coach · '+p.year;
-    document.getElementById('wkChip').textContent='Week '+GS.week;
+    document.getElementById('wkChip').textContent='Wk '+GS.week+'/15';
     document.getElementById('nilChip').textContent='$'+GS.nil.toFixed(1)+'M NIL';
     setStadiumBg(school);
     // Regenerate roster + boosters
@@ -3821,6 +4866,80 @@ function saveCurrentGame(){
 //  SOUND WIRING HELPERS
 // ═══════════════════════════════════════════════
 function S(name){ if(window.FFF && window.FFF.sound) FFF.sound.play(name); }
+
+// ── THEME TOGGLE ──
+function toggleTheme(){
+  const isLight = document.documentElement.getAttribute('data-theme')==='light';
+  document.documentElement.setAttribute('data-theme', isLight?'dark':'light');
+  localStorage.setItem('fffTheme', isLight?'dark':'light');
+}
+function initTheme(){
+  const saved = localStorage.getItem('fffTheme')||'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const stars = document.getElementById('ttStars');
+  if(stars){
+    const pos=[[8,6,2],[20,14,1.5],[12,20,1],[32,8,1.5],[28,18,1],[6,22,1.5]];
+    stars.innerHTML=pos.map(([x,y,r])=>`<span class="tt-star" style="left:${x}px;top:${y}px;width:${r*2}px;height:${r*2}px;"></span>`).join('');
+  }
+}
+
+// ── SCHOOL SELECT POPUP ──
+function pickSc(id){
+  selSc=SCHOOLS.find(s=>s.id===id);
+  if(!selSc) return;
+  document.querySelectorAll('.sc').forEach(el=>el.classList.remove('sel'));
+  const card=document.getElementById('sc-'+id);
+  if(card) card.classList.add('sel');
+  setStadiumBg(selSc);
+  showSchoolPopup(selSc);
+}
+function showSchoolPopup(s){
+  const ex=document.getElementById('schoolPopup'); if(ex) ex.remove();
+  const pop=document.createElement('div');
+  pop.id='schoolPopup';
+  pop.style.cssText='position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);animation:fadeIn .2s ease;';
+  const pres='★'.repeat(s.prestige)+'☆'.repeat(5-s.prestige);
+  pop.innerHTML=`
+    <div style="background:rgba(10,18,11,.98);border:1px solid rgba(255,255,255,.13);border-radius:var(--r28);
+      padding:28px 30px;max-width:400px;width:90%;animation:modalIn .3s cubic-bezier(.34,1.56,.64,1) both;
+      box-shadow:0 30px 80px rgba(0,0,0,.8);">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+        <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/${s.espnId}.png"
+          style="width:60px;height:60px;object-fit:contain;border-radius:14px;background:rgba(255,255,255,.05);padding:4px;"
+          onerror="this.style.display='none'">
+        <div>
+          <div style="font-family:var(--co);font-size:20px;color:#fff;line-height:1.2;">${s.name}</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:3px;">${s.conf} · ${pres}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px;">
+        <div style="text-align:center;background:var(--surf);border-radius:var(--r10);padding:11px 6px;">
+          <div style="font-family:var(--co);font-size:20px;color:var(--gold);">$${s.nil}M</div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">NIL Pool</div>
+        </div>
+        <div style="text-align:center;background:var(--surf);border-radius:var(--r10);padding:11px 6px;">
+          <div style="font-family:var(--co);font-size:16px;color:${s.difficulty==='Elite'?'#f08080':s.difficulty==='Hard'?'var(--gold)':'#5fda90'};">${s.difficulty}</div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Difficulty</div>
+        </div>
+        <div style="text-align:center;background:var(--surf);border-radius:var(--r10);padding:11px 6px;">
+          <div style="font-family:var(--co);font-size:20px;color:var(--tc);">${s.prestige}/5</div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Prestige</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="document.getElementById('schoolPopup').remove();selSc=null;document.querySelectorAll('.sc').forEach(e=>e.classList.remove('sel'));"
+          style="flex:1;padding:12px;border-radius:var(--rpill);background:var(--surf);color:var(--t2);
+          border:1px solid var(--gb);font-family:var(--co);font-size:13px;cursor:pointer;">Cancel</button>
+        <button onclick="document.getElementById('schoolPopup').remove();startGame();"
+          style="flex:2;padding:12px;border-radius:var(--rpill);background:var(--tc);color:#000;
+          border:none;font-family:var(--co);font-size:15px;cursor:pointer;letter-spacing:.5px;">
+          Accept Offer →
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(pop);
+  pop.addEventListener('click',e=>{ if(e.target===pop){ pop.remove();selSc=null;document.querySelectorAll('.sc').forEach(el=>el.classList.remove('sel')); }});
+}
 
 function toggleMute(){
   if(!window.FFF || !window.FFF.sound) return;
@@ -4295,6 +5414,7 @@ window.simGame = function(){
 // ═══════════════════════════════════════════════
 renderConfTabs();
 initParticles();
+initTheme();
 
 // ═══════════════════════════════════════════════
 //  PLAYER PROGRESSION SYSTEM
