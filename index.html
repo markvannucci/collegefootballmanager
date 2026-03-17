@@ -941,10 +941,197 @@ body{min-height:100vh;font-family:var(--body);background:#080e09;color:var(--t1)
   .toast{max-width:100%;}
 }
 
+/* ── SECTION HEADERS — clear visual hierarchy ── */
+.page-header{margin-bottom:20px;}
+.page-title{font-family:var(--co);font-size:clamp(24px,4vw,34px);color:#fff;line-height:1;letter-spacing:1px;}
+.page-title-accent{color:var(--tc);}
+.page-sub{font-size:13px;color:var(--t3);margin-top:5px;font-weight:300;}
+.section-label{font-family:var(--co);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--gb);}
+
+/* ── RECRUITING WAR ROOM ── */
+.rec-war-room{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start;}
+@media(max-width:1100px){.rec-war-room{grid-template-columns:1fr;}}
+.target-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r22);
+  padding:16px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;}
+.target-card:hover{background:var(--gh);transform:translateY(-2px);}
+.target-card.on-fire{border-color:var(--tc-g);background:var(--tc-dim);}
+.target-card.rival-danger{border-color:rgba(224,82,82,.45);animation:rPulse 2s ease-in-out infinite;}
+.target-card.committed{border-color:rgba(58,158,104,.4);background:var(--ok-s);}
+@keyframes heatPulse2{0%,100%{box-shadow:0 0 0 0 var(--tc-glow)}50%{box-shadow:0 0 18px 2px var(--tc-glow)}}
+.target-card.on-fire{animation:heatPulse2 2.2s ease-in-out infinite;}
+.tc-top{display:flex;gap:12px;align-items:center;margin-bottom:12px;}
+.tc-avatar{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--co);font-size:16px;color:#fff;flex-shrink:0;}
+.tc-info{flex:1;min-width:0;}
+.tc-name{font-family:var(--co);font-size:15px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tc-meta{font-size:11px;color:var(--t3);margin-top:2px;}
+.tc-stars{color:var(--gold);font-size:12px;}
+.tc-ovr-badge{font-family:var(--co);font-size:22px;line-height:1;flex-shrink:0;}
+.interest-bar-wrap{margin-bottom:10px;}
+.interest-bar-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.interest-bar-lbl{font-family:var(--co);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);}
+.interest-bar-pct{font-family:var(--co);font-size:13px;}
+.interest-bar-track{height:7px;background:rgba(255,255,255,.07);border-radius:var(--rpill);overflow:hidden;}
+.interest-bar-fill{height:100%;border-radius:var(--rpill);transition:width .5s cubic-bezier(.34,1.56,.64,1);}
+.interest-bar-fill.high{background:linear-gradient(90deg,var(--tc),#4fce8a);}
+.interest-bar-fill.mid{background:var(--gold);}
+.interest-bar-fill.low{background:var(--danger);}
+.tc-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;}
+.tc-act{font-family:var(--co);font-size:10px;padding:6px 12px;border-radius:var(--rpill);
+  border:1px solid var(--gb);background:var(--surf);color:var(--t2);cursor:pointer;transition:all .18s;white-space:nowrap;}
+.tc-act:hover:not(:disabled){transform:translateY(-1px);}
+.tc-act:disabled{opacity:.3;cursor:not-allowed;}
+.tc-act.call{border-color:rgba(74,143,212,.35);color:#80b8f0;}
+.tc-act.call:hover:not(:disabled){background:rgba(74,143,212,.12);}
+.tc-act.visit{border-color:rgba(58,158,104,.35);color:#5fda90;}
+.tc-act.visit:hover:not(:disabled){background:rgba(58,158,104,.12);}
+.tc-act.nil{border-color:var(--gold-g);color:var(--gold);}
+.tc-act.nil:hover:not(:disabled){background:var(--gold-s);}
+.tc-act.official{border-color:rgba(139,111,212,.35);color:#c0a8ff;}
+.tc-act.official:hover:not(:disabled){background:var(--purple-s);}
+.rival-alert-bar{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--r10);
+  background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.25);margin-bottom:8px;font-size:11px;color:#f08080;}
+.commit-banner{padding:10px 14px;border-radius:var(--r16);background:var(--ok-s);
+  border:1px solid rgba(58,158,104,.3);font-family:var(--co);font-size:13px;color:#5fda90;
+  display:flex;align-items:center;gap:8px;}
+.rec-sidebar{display:flex;flex-direction:column;gap:10px;position:sticky;top:72px;}
+.need-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--r10);
+  cursor:pointer;transition:all .15s;border:1px solid var(--gb);background:var(--surf);}
+.need-pill:hover{background:var(--surfh);}
+.need-pill.urgent{border-color:rgba(224,82,82,.4);background:rgba(224,82,82,.06);}
+.need-pill.needed{border-color:rgba(212,134,10,.35);}
+.need-pill.active-filter{border-color:var(--tc-g);background:var(--tc-dim);}
+.need-pos{font-family:var(--co);font-size:17px;width:32px;color:#fff;}
+.need-info{flex:1;}
+.need-name{font-size:12px;color:var(--t2);}
+.need-status{font-family:var(--co);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
+.budget-bar{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r22);
+  padding:12px 18px;backdrop-filter:blur(20px);display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+.budget-item{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.budget-icon{font-size:16px;line-height:1;}
+.budget-count{font-family:var(--co);font-size:10px;}
+.budget-avail{color:var(--tc);}
+.budget-used{color:var(--t3);text-decoration:line-through;}
+.budget-sep{width:1px;background:var(--gb);align-self:stretch;}
+
+/* ── BOOSTER MINI-GAME ── */
+.booster-war-room{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:900px){.booster-war-room{grid-template-columns:1fr;}}
+.booster-card-full{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r28);
+  overflow:hidden;cursor:pointer;transition:all .2s;}
+.booster-card-full:hover{border-color:rgba(255,255,255,.18);transform:translateY(-1px);}
+.bcf-header{padding:20px 22px 16px;position:relative;}
+.bcf-name{font-family:var(--co);font-size:20px;color:#fff;line-height:1;margin-bottom:3px;}
+.bcf-type{font-size:11px;color:var(--t3);margin-bottom:10px;}
+.bcf-nil-row{display:flex;align-items:baseline;gap:6px;margin-bottom:12px;}
+.bcf-nil-val{font-family:var(--co);font-size:28px;color:var(--gold);line-height:1;}
+.bcf-nil-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;}
+.bcf-mood{font-size:12px;color:var(--t2);font-style:italic;line-height:1.5;
+  background:var(--surf);border-radius:var(--r10);padding:10px 12px;margin-bottom:12px;}
+.bcf-wants{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;}
+.bcf-want{font-family:var(--co);font-size:9px;padding:3px 9px;border-radius:var(--rpill);
+  background:var(--surf);border:1px solid var(--gb);color:var(--t2);}
+.bcf-rel-bar{height:5px;background:rgba(255,255,255,.06);border-radius:var(--rpill);overflow:hidden;margin-bottom:5px;}
+.bcf-rel-fill{height:100%;border-radius:var(--rpill);transition:width .6s cubic-bezier(.34,1.56,.64,1);}
+.bcf-rel-label{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);font-family:var(--co);}
+.bcf-pitch-btn{width:100%;padding:12px;border-radius:var(--r16);border:1px solid var(--tc-g);
+  background:var(--tc-s);color:var(--tc);font-family:var(--co);font-size:13px;cursor:pointer;transition:all .2s;}
+.bcf-pitch-btn:hover{background:var(--tc-g);color:#000;}
+
+/* Pitch overlay */
+.pitch-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.82);
+  backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:2rem;}
+.pitch-panel{background:rgba(10,16,11,.98);border:1px solid var(--gb);border-radius:var(--r28);
+  max-width:540px;width:100%;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.9);animation:modalIn .3s cubic-bezier(.34,1.56,.64,1) both;}
+.pitch-header{padding:22px 22px 0;display:flex;align-items:flex-start;gap:14px;}
+.pitch-avatar{width:52px;height:52px;border-radius:16px;background:var(--tc-s);border:2px solid var(--tc-g);
+  display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.pitch-header-info{flex:1;}
+.pitch-name{font-family:var(--co);font-size:20px;color:#fff;line-height:1;}
+.pitch-subtitle{font-size:12px;color:var(--t3);margin-top:3px;}
+.pitch-rel-meter{margin:16px 22px 0;padding:12px 14px;background:var(--surf);border-radius:var(--r16);}
+.pitch-rel-top{display:flex;justify-content:space-between;margin-bottom:5px;}
+.pitch-rel-lbl{font-family:var(--co);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);}
+.pitch-rel-num{font-family:var(--co);font-size:14px;}
+.pitch-rel-track{height:7px;background:rgba(255,255,255,.06);border-radius:var(--rpill);overflow:hidden;}
+.pitch-rel-fill{height:100%;border-radius:var(--rpill);transition:width .7s cubic-bezier(.34,1.56,.64,1);}
+.pitch-body{padding:16px 22px 22px;}
+.pitch-prompt{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:14px;
+  background:var(--surf);border-radius:var(--r10);padding:12px 14px;border-left:3px solid var(--tc);}
+.pitch-options{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.pitch-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--r16);
+  border:1px solid var(--gb);background:var(--surf);cursor:pointer;transition:all .18s;}
+.pitch-opt:hover{background:var(--surfh);transform:translateX(3px);}
+.pitch-opt.good{border-color:rgba(58,158,104,.3);}
+.pitch-opt.risky{border-color:rgba(212,134,10,.3);}
+.pitch-opt.danger{border-color:rgba(224,82,82,.3);}
+.pitch-opt-icon{font-size:18px;flex-shrink:0;}
+.pitch-opt-text{flex:1;}
+.pitch-opt-title{font-family:var(--co);font-size:13px;color:#fff;}
+.pitch-opt-desc{font-size:11px;color:var(--t3);margin-top:2px;}
+.pitch-opt-effect{font-family:var(--co);font-size:10px;flex-shrink:0;padding:2px 8px;border-radius:var(--rpill);}
+
+/* ── COACH UPGRADES ── */
+.coach-screen{display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start;}
+@media(max-width:900px){.coach-screen{grid-template-columns:1fr;}}
+.coach-profile-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r28);
+  padding:22px;text-align:center;position:sticky;top:72px;}
+.coach-avatar{width:72px;height:72px;border-radius:20px;background:var(--tc-s);border:2px solid var(--tc-g);
+  display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;}
+.coach-title{font-family:var(--co);font-size:20px;color:#fff;line-height:1;margin-bottom:2px;}
+.coach-school-lbl{font-size:11px;color:var(--t3);margin-bottom:12px;}
+.coach-salary-row{display:flex;align-items:center;justify-content:space-between;
+  background:var(--surf);border-radius:var(--r10);padding:9px 12px;margin-bottom:8px;}
+.coach-salary-lbl{font-family:var(--co);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);}
+.coach-salary-val{font-family:var(--co);font-size:16px;color:var(--gold);}
+.coach-bank-row{display:flex;align-items:center;justify-content:space-between;
+  background:var(--tc-s);border:1px solid var(--tc-g);border-radius:var(--r10);padding:9px 12px;}
+.coach-bank-lbl{font-family:var(--co);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--tc);}
+.coach-bank-val{font-family:var(--co);font-size:16px;color:var(--tc);}
+.coach-attr-list{margin-top:12px;display:flex;flex-direction:column;gap:5px;text-align:left;}
+.coach-attr-row{display:flex;align-items:center;gap:8px;}
+.coach-attr-lbl{font-size:11px;color:var(--t2);flex:1;}
+.coach-attr-bar{width:56px;height:3px;background:rgba(255,255,255,.08);border-radius:var(--rpill);overflow:hidden;}
+.coach-attr-fill{height:100%;border-radius:var(--rpill);background:var(--tc);}
+.coach-attr-val{font-family:var(--co);font-size:12px;color:#fff;width:22px;text-align:right;}
+.upgrade-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.upgrade-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r22);
+  padding:16px;transition:all .2s;position:relative;overflow:hidden;}
+.upgrade-card:hover:not(.owned):not(.locked){border-color:rgba(255,255,255,.18);transform:translateY(-1px);}
+.upgrade-card.owned{border-color:var(--tc-g);background:var(--tc-dim);}
+.upgrade-card.locked{opacity:.45;}
+.upgrade-icon{font-size:26px;margin-bottom:8px;line-height:1;}
+.upgrade-name{font-family:var(--co);font-size:14px;color:#fff;margin-bottom:3px;}
+.upgrade-desc{font-size:11px;color:var(--t2);line-height:1.5;margin-bottom:10px;}
+.upgrade-effect{font-size:11px;color:var(--tc);font-family:var(--co);margin-bottom:10px;}
+.upgrade-cost{display:flex;align-items:center;justify-content:space-between;}
+.upgrade-price{font-family:var(--co);font-size:13px;color:var(--gold);}
+.upgrade-btn{font-family:var(--co);font-size:11px;padding:5px 14px;border-radius:var(--rpill);border:none;cursor:pointer;transition:all .2s;}
+.upgrade-btn.buy{background:var(--tc);color:#000;}
+.upgrade-btn.buy:hover{filter:brightness(1.1);}
+.upgrade-btn.bought{background:var(--ok-s);color:#5fda90;border:1px solid rgba(58,158,104,.3);cursor:default;}
+.upgrade-btn.cant{background:var(--surf);color:var(--t3);cursor:not-allowed;}
+.upgrade-owned-badge{position:absolute;top:10px;right:10px;font-family:var(--co);font-size:9px;
+  padding:2px 7px;border-radius:var(--rpill);background:var(--ok-s);color:#5fda90;border:1px solid rgba(58,158,104,.25);}
+
+@media(max-width:640px){
+  .rec-war-room{grid-template-columns:1fr;}
+  .booster-war-room{grid-template-columns:1fr;}
+  .coach-screen{grid-template-columns:1fr;}
+  .upgrade-grid{grid-template-columns:1fr 1fr;}
+  /* Game sim mobile: full height canvas, stacked play cards */
+  #gs-main{flex-direction:column!important;}
+  #gs-main > div:first-child > div[style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr!important;}
+}
 @media(max-width:400px){
   .stats-row{grid-template-columns:1fr 1fr;gap:5px;}
   .sc-val{font-size:28px;}
   .diff-grid{grid-template-columns:1fr;}
+  .upgrade-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -1040,6 +1227,7 @@ body{min-height:100vh;font-family:var(--body);background:#080e09;color:var(--t1)
         <button class="npb" onclick="tab('nil',this)">NIL Cap</button>
         <button class="npb" onclick="tab('boosters',this)">Boosters</button>
         <button class="npb" onclick="tab('portal',this)">Portal</button>
+        <button class="npb" onclick="tab('coach',this)">🏆 Coach</button>
       </nav>
     </div>
     <div class="topbar-r">
@@ -1459,7 +1647,8 @@ const PORTAL_ACT=[
 // ═══════════════════════════════════════════════
 //  GAME STATE
 // ═══════════════════════════════════════════════
-let GS={school:null,week:1,wins:0,losses:0,rank:null,nil:0,jobSec:72,coachName:'Coach',difficulty:'varsity'};
+let GS={school:null,week:1,wins:0,losses:0,rank:null,nil:0,jobSec:72,coachName:'Coach',difficulty:'varsity',
+  coachSalary:0, coachBank:0, coachUpgrades:[]};
 let selSc=null,mActs=[];
 let selDiff='varsity';
 
@@ -2033,6 +2222,10 @@ function clearSc(){
 function startGame(){
   if(!selSc)return;
   GS.school=selSc;GS.nil=selSc.nil;GS.week=1;GS.wins=0;GS.losses=0;
+  // Coach salary based on school prestige ($300k–$3M/yr)
+  GS.coachSalary = [0.3,0.6,1.2,2.0,3.0][selSc.prestige-1]||0.6;
+  GS.coachBank = 0;
+  GS.coachUpgrades = [];
 
   // Generate 50-man roster
   PLAYERS.length=0;
@@ -2093,6 +2286,7 @@ function mobileTab(t, btn){
   else if(t==='nil') renderNILCap();
   else if(t==='boosters') renderBoosters();
   else if(t==='portal') renderPortal();
+  else if(t==='coach') renderCoach();
 }
 
 
@@ -3116,22 +3310,204 @@ function runRivalPressure(){
 // ═══════════════════════════════════════════════
 //  BOOSTERS
 // ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+//  BOOSTER MINI-GAME
+// ═══════════════════════════════════════════════
+
+const PITCH_SCENARIOS = [
+  { id:'wins', label:'Pitch Your Record', icon:'🏆',
+    prompts:[
+      '"Coach, you know I care about wins. What have you actually built here?"',
+      '"I\'ve been watching. The scoreboard tells me everything. Sell me on the trajectory."',
+      '"My money follows winners. Are you a winner, Coach?"',
+    ],
+    options:[
+      { label:'Show the data', desc:'Walk through win trends, strength of schedule', icon:'📊', type:'good',
+        effect:'+8 to +14 rel', fn:(b)=>{ const g=rng(8,14); b.rel=Math.min(100,b.rel+g); return {delta:g,txt:`Solid data presentation. ${b.name} nods.`}; }},
+      { label:'Promise a title run', desc:'Bold claim — exciting but risky if you underperform', icon:'🎯', type:'risky',
+        effect:'+12 or -8', fn:(b)=>{ if(Math.random()<.55){const g=rng(10,16);b.rel=Math.min(100,b.rel+g);return{delta:g,txt:'He likes the ambition.'};} const l=rng(6,10);b.rel=Math.max(0,b.rel-l);return{delta:-l,txt:'Too much bluster. He\'s been around too long for empty promises.'}; }},
+      { label:'Be honest about the rebuild', desc:'Realistic timeline builds trust', icon:'🤝', type:'good',
+        effect:'+5 to +10 rel', fn:(b)=>{ const g=rng(5,10); b.rel=Math.min(100,b.rel+g); return {delta:g,txt:'Honesty lands well. He respects the process.'}; }},
+    ]},
+  { id:'recruit', label:'Show Your Class', icon:'⭐',
+    prompts:[
+      '"My money builds facilities that recruit 5-stars. Where\'s the 5-star class, Coach?"',
+      '"I\'m not a charity. I want to see blue-chip talent walking through that door."',
+      '"Recruiting is the lifeblood. Convince me yours is elite."',
+    ],
+    options:[
+      { label:'Show your board commitments', desc:'Hard numbers, names on the board', icon:'📋', type:'good',
+        effect:'+6 to +12 rel', fn:(b)=>{ const committed=RECRUITS.filter(r=>r.committed).length; const g=Math.min(14,4+committed*2); b.rel=Math.min(100,b.rel+g); return{delta:g,txt:`${committed} commits is solid evidence.`}; }},
+      { label:'Promise to spend more NIL', desc:'Booster unlocks extra funding — costs your NIL pool', icon:'💰', type:'risky',
+        effect:'+10 rel, -$2M NIL', fn:(b)=>{ b.rel=Math.min(100,b.rel+10); b.nil=Math.max(1,b.nil-.5); GS.nil=Math.max(0,GS.nil-2); document.getElementById('nilChip').textContent='$'+GS.nil.toFixed(1)+'M NIL'; return{delta:10,txt:'He opens the wallet a little more.'}; }},
+      { label:'Pitch a needle recruit', desc:'Show him a hidden gem you\'ve found', icon:'💎', type:'good',
+        effect:'+4 to +9 rel', fn:(b)=>{ const needles=RECRUITS.filter(r=>r.needle&&r.onBoard); const g=needles.length?rng(7,14):rng(2,5); b.rel=Math.min(100,b.rel+g); return{delta:g,txt:needles.length?'The diamond-in-the-rough pitch works on him.':'Couldn\'t back it up. Needs more scouts deployed.'}; }},
+    ]},
+  { id:'culture', label:'Program Culture', icon:'🏈',
+    prompts:[
+      '"Is this a program guys want to bleed for, or just a pit stop for the portal?"',
+      '"I went to this school. I need to feel pride in what we\'re building."',
+      '"Player development. Team culture. What\'s the vibe in that locker room?"',
+    ],
+    options:[
+      { label:'Highlight team chemistry', desc:'Point to wins, player development, morale', icon:'🤜', type:'good',
+        effect:'+7 to +13 rel', fn:(b)=>{ const g=rng(7,13); b.rel=Math.min(100,b.rel+g); return{delta:g,txt:'He can feel the energy. Nodding now.'}; }},
+      { label:'Address the portal problem', desc:'Acknowledge it, show your retention plan', icon:'🚪', type:'risky',
+        effect:'+5 or -4 rel', fn:(b)=>{ if(Math.random()<.6){const g=rng(5,10);b.rel=Math.min(100,b.rel+g);return{delta:g,txt:'Owning the issue impresses him.'};} const l=rng(3,6);b.rel=Math.max(0,b.rel-l);return{delta:-l,txt:'Bringing it up made it worse. He\'s worried now.'}; }},
+      { label:'Let a player\'s story sell it', desc:'Quote a player who thrived here', icon:'💬', type:'good',
+        effect:'+6 to +11 rel', fn:(b)=>{ const g=rng(6,11); b.rel=Math.min(100,b.rel+g); return{delta:g,txt:'Personal stories land. He\'s emotional about this.'}; }},
+    ]},
+  { id:'nil', label:'NIL Strategy', icon:'💵',
+    prompts:[
+      '"I write checks. I need to know they\'re going to the right players, Coach."',
+      '"The portal runs on NIL now. Walk me through your strategy."',
+      '"Are we competitive? Or are we getting outbid by everyone?"',
+    ],
+    options:[
+      { label:'Show your NIL efficiency', desc:'Demonstrate ROI per dollar spent', icon:'📈', type:'good',
+        effect:'+7 to +12 rel', fn:(b)=>{ const g=rng(7,12); b.rel=Math.min(100,b.rel+g); return{delta:g,txt:'He appreciates the fiscal discipline.'}; }},
+      { label:'Ask for a bigger pool', desc:'Request more NIL funding — big swing', icon:'💰', type:'risky',
+        effect:'+15 rel +$3M OR -12 rel', fn:(b)=>{ if(b.rel>=60&&Math.random()<.55){b.rel=Math.min(100,b.rel+15);const bonus=3;GS.nil+=bonus;document.getElementById('nilChip').textContent='$'+GS.nil.toFixed(1)+'M NIL';return{delta:15,txt:`He writes you a check. +$${bonus}M NIL pool.`};} const l=rng(10,14);b.rel=Math.max(0,b.rel-l);return{delta:-l,txt:'Too aggressive. He\s not happy about the ask.'}; }},
+      { label:'Show player satisfaction', desc:'Prove your players are happy with their deals', icon:'😊', type:'good',
+        effect:'+5 to +9 rel', fn:(b)=>{ const happy=PLAYERS.filter(p=>p.nilSat>=70).length; const g=Math.min(12,3+happy); b.rel=Math.min(100,b.rel+g); return{delta:g,txt:`${happy} happy players speaks for itself.`}; }},
+    ]},
+];
+
 function renderBoosters(){
   document.getElementById('dw').innerHTML=`
-    <div class="sh"><div class="st">NIL Collective</div><div class="ss">Manage booster relationships · unlock funding</div></div>
-    <div class="boost-full">${BOOSTERS.map(b=>{
-      const rc=b.rel>=70?'rg':b.rel>=45?'ro':'rb';
-      return `<div class="bfc" onclick="openBooster('${b.name}')">
-        <div class="bi-top" style="margin-bottom:12px;">
-          <div><div class="bi-name" style="font-size:16px;">${b.name}</div><div class="bi-type">${b.type}</div></div>
-          <div><div class="bi-nil" style="font-size:24px;">$${b.nil}M</div><div class="bi-nlbl">NIL Pool</div></div>
+    <div class="page-header">
+      <div class="page-title">NIL <span class="page-title-accent">Collective</span></div>
+      <div class="page-sub">Build relationships · pitch boosters · unlock funding</div>
+    </div>
+    <div class="booster-war-room">
+      ${BOOSTERS.map(b=>{
+        const relCol = b.rel>=70?'#4fce8a':b.rel>=45?'var(--gold)':'#e07070';
+        const relFillCls = b.rel>=70?'rg':b.rel>=45?'ro':'rb';
+        const tier = b.rel>=80?'ALLIANCE':b.rel>=60?'FRIENDLY':b.rel>=40?'NEUTRAL':b.rel>=20?'SKEPTICAL':'HOSTILE';
+        const tierCol = b.rel>=80?'#4fce8a':b.rel>=60?'var(--tc)':b.rel>=40?'var(--gold)':b.rel>=20?'#e8a040':'#e07070';
+        return `<div class="booster-card-full" onclick="openBoosterPitch('${b.name.replace(/'/g,"\\'")}')">
+          <div class="bcf-header">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+              <div>
+                <div class="bcf-name">${b.name}</div>
+                <div class="bcf-type">${b.type}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:var(--co);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:${tierCol};margin-bottom:3px;">${tier}</div>
+                <div style="font-family:var(--co);font-size:11px;color:${relCol};">${b.rel}/100</div>
+              </div>
+            </div>
+            <div class="bcf-nil-row">
+              <div class="bcf-nil-val">$${b.nil}M</div>
+              <div class="bcf-nil-lbl">NIL Pool</div>
+            </div>
+            <div class="bcf-rel-bar"><div class="bcf-rel-fill ${relFillCls}" style="width:${b.rel}%;"></div></div>
+            <div class="bcf-rel-label" style="margin-bottom:12px;"><span>Relationship</span><span style="color:${relCol};">${b.rel}%</span></div>
+            <div class="bcf-mood">${b.mood}</div>
+            <div class="bcf-wants">${b.wants.map(w=>`<div class="bcf-want">${w}</div>`).join('')}</div>
+            <button class="bcf-pitch-btn" onclick="event.stopPropagation();openBoosterPitch('${b.name.replace(/'/g,"\\'")}')">
+              ${b.rel>=80?'☕ Check In':'🎯 Pitch Meeting'} →
+            </button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function openBoosterPitch(name){
+  const b = BOOSTERS.find(x=>x.name===name);
+  if(!b) return;
+  S('modal');
+
+  const scenario = PITCH_SCENARIOS[Math.floor(Math.random()*PITCH_SCENARIOS.length)];
+  const prompt = pick(scenario.prompts);
+  const relCol = b.rel>=70?'#4fce8a':b.rel>=45?'var(--gold)':'#e07070';
+
+  const ov = document.createElement('div');
+  ov.className = 'pitch-overlay';
+  ov.id = 'pitchOverlay';
+  ov.innerHTML = `
+    <div class="pitch-panel">
+      <div class="pitch-header">
+        <div class="pitch-avatar">🤵</div>
+        <div class="pitch-header-info">
+          <div class="pitch-name">${b.name}</div>
+          <div class="pitch-subtitle">${b.type} · ${scenario.label}</div>
         </div>
-        <div style="font-size:11px;color:var(--t3);display:flex;justify-content:space-between;margin-bottom:5px;"><span>Relationship</span><span>${b.rel}/100</span></div>
-        <div class="rt" style="height:5px;margin-bottom:11px;"><div class="rf ${rc}" style="width:${b.rel}%"></div></div>
-        <div class="bi-mood" style="margin-bottom:11px;">${b.mood}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">${b.wants.map(w=>`<span style="font-family:var(--co);font-size:10px;padding:3px 9px;border-radius:var(--rpill);background:var(--glass);border:1px solid var(--gb);color:var(--t2);">${w}</span>`).join('')}</div>
-        <button class="meet-btn">Schedule Meeting</button>
-      </div>`;}).join('')}`;
+        <button onclick="closePitch()" style="background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:4px;">✕</button>
+      </div>
+      <div class="pitch-rel-meter">
+        <div class="pitch-rel-top">
+          <span class="pitch-rel-lbl">Relationship</span>
+          <span class="pitch-rel-num" style="color:${relCol};" id="pitchRelNum">${b.rel}/100</span>
+        </div>
+        <div class="pitch-rel-track">
+          <div class="pitch-rel-fill" id="pitchRelFill"
+            style="width:${b.rel}%;background:${relCol};"></div>
+        </div>
+      </div>
+      <div class="pitch-body">
+        <div class="pitch-prompt">${scenario.icon} "${prompt}"</div>
+        <div class="pitch-options" id="pitchOptions">
+          ${scenario.options.map((opt,i)=>`
+            <div class="pitch-opt ${opt.type}" onclick="doPitch(${i})">
+              <div class="pitch-opt-icon">${opt.icon}</div>
+              <div class="pitch-opt-text">
+                <div class="pitch-opt-title">${opt.label}</div>
+                <div class="pitch-opt-desc">${opt.desc}</div>
+              </div>
+              <div class="pitch-opt-effect" style="background:${opt.type==='good'?'var(--ok-s)':opt.type==='risky'?'var(--warn-s)':'var(--danger-s)'};color:${opt.type==='good'?'#5fda90':opt.type==='risky'?'var(--gold)':'#f08080'};border:1px solid ${opt.type==='good'?'rgba(58,158,104,.25)':opt.type==='risky'?'rgba(212,134,10,.25)':'rgba(224,82,82,.25)'};">
+                ${opt.effect}
+              </div>
+            </div>`).join('')}
+        </div>
+        <div id="pitchResult" style="display:none;"></div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+  window._activePitch = {b, scenario};
+}
+
+function doPitch(optIdx){
+  const {b, scenario} = window._activePitch;
+  const opt = scenario.options[optIdx];
+  const result = opt.fn(b);
+
+  // Update the meter
+  const relCol = b.rel>=70?'#4fce8a':b.rel>=45?'var(--gold)':'#e07070';
+  const fill = document.getElementById('pitchRelFill');
+  const num = document.getElementById('pitchRelNum');
+  if(fill){ fill.style.width=b.rel+'%'; fill.style.background=relCol; }
+  if(num){ num.textContent=b.rel+'/100'; num.style.color=relCol; }
+
+  // Hide options, show result
+  const opts = document.getElementById('pitchOptions');
+  const res = document.getElementById('pitchResult');
+  if(opts) opts.style.display='none';
+  if(res){
+    const isGood = result.delta > 0;
+    res.style.display='block';
+    res.innerHTML = `
+      <div style="text-align:center;padding:16px;border-radius:var(--r16);
+        background:${isGood?'var(--ok-s)':result.delta<-8?'var(--danger-s)':'var(--warn-s)'};
+        border:1px solid ${isGood?'rgba(58,158,104,.3)':result.delta<-8?'rgba(224,82,82,.3)':'rgba(212,134,10,.3)'};
+        animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;">
+        <div style="font-size:36px;margin-bottom:8px;">${isGood?'🤝':'😤'}</div>
+        <div style="font-family:var(--co);font-size:16px;color:#fff;margin-bottom:6px;">
+          ${result.delta>0?'+'+result.delta:result.delta} Relationship
+        </div>
+        <div style="font-size:13px;color:var(--t2);margin-bottom:16px;">${result.txt}</div>
+        <button class="mb-p" onclick="closePitch();renderBoosters();">Done</button>
+      </div>`;
+    if(isGood) S('goodPlay'); else S('bust');
+  }
+}
+
+function closePitch(){
+  const ov = document.getElementById('pitchOverlay');
+  if(ov){ ov.style.opacity='0'; ov.style.transition='opacity .25s'; setTimeout(()=>ov.remove(),260); }
+  S('dismiss');
 }
 
 // ═══════════════════════════════════════════════
@@ -3171,7 +3547,9 @@ function advWeek(){
   runRivalPressure();
   updateScoutUI();
   processNILContracts();
-  // Player progression — pass whether last game was a win
+  // Pay coach weekly salary
+  const weeklySalary = Math.round((GS.coachSalary||0) / 12 * 100) / 100;
+  GS.coachBank = Math.round(((GS.coachBank||0) + weeklySalary) * 100) / 100;
   const lastGame = SCHEDULE.filter(g=>g.result).pop();
   const wonLast = lastGame && lastGame.result === 'W';
   processPlayerProgression(wonLast);
@@ -3791,6 +4169,7 @@ window.tab = function(t, btn){
   else if(t==='nil') renderNILCap();
   else if(t==='boosters') renderBoosters();
   else if(t==='portal') renderPortal();
+  else if(t==='coach') renderCoach();
 };
 
 // ═══════════════════════════════════════════════
@@ -3911,8 +4290,11 @@ window.simGame = function(){
   _oldSimGame();
 };
 
-// Patch advance week recruiting panel
-const _oldAdvWeek2 = window.advWeek;
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+renderConfTabs();
+initParticles();
 
 // ═══════════════════════════════════════════════
 //  PLAYER PROGRESSION SYSTEM
@@ -4136,10 +4518,337 @@ function mainMenu(){
 }
 
 // ═══════════════════════════════════════════════
-//  INIT
+//  COACH UPGRADES SYSTEM
 // ═══════════════════════════════════════════════
-renderConfTabs();
-initParticles();
+const COACH_UPGRADES = [
+  // Recruiting
+  { id:'rc1', name:'Recruiting Coordinator', icon:'📋', category:'Recruiting',
+    desc:'Dedicated coordinator tracks 25 more recruits. +1 phone call per week.',
+    effect:'+1 Call/wk', cost:0.5, requires:[],
+    apply:()=>{ AP.calls++; } },
+  { id:'rc2', name:'NIL Scout Network', icon:'💎', category:'Recruiting',
+    desc:'Underground scout finds hidden needles faster. Needle chance doubles.',
+    effect:'2x needle finds', cost:1.2, requires:['rc1'],
+    apply:()=>{ /* handled in genRecruit */ } },
+  { id:'rc3', name:'Elite Junior Day', icon:'⭐', category:'Recruiting',
+    desc:'Annual event draws top recruits to campus. +15 interest to all board targets.',
+    effect:'+15 to board targets', cost:2.0, requires:['rc1'],
+    apply:()=>{ RECRUITS.filter(r=>r.onBoard).forEach(r=>r.interest=Math.min(100,r.interest+15)); toast('🏟️ Junior Day!','All board targets got +15 interest.'); } },
+  // NIL
+  { id:'nil1', name:'NIL Advisor', icon:'💰', category:'NIL Management',
+    desc:'Expert keeps players happier at lower cost. NIL satisfaction decay halved.',
+    effect:'50% less NIL decay', cost:0.8, requires:[],
+    apply:()=>{ /* handled in processNILContracts */ } },
+  { id:'nil2', name:'Collective Expansion', icon:'🏦', category:'NIL Management',
+    desc:'Unlock a new booster tier. Adds $3M to NIL pool.',
+    effect:'+$3M NIL pool', cost:1.5, requires:['nil1'],
+    apply:()=>{ GS.nil+=3; document.getElementById('nilChip').textContent='$'+GS.nil.toFixed(1)+'M NIL'; } },
+  // Scouting
+  { id:'sc1', name:'Film Room Upgrade', icon:'🎥', category:'Scouting',
+    desc:'Advanced video analysis. Scout points recharge 50% faster.',
+    effect:'+50% scout recharge', cost:0.6, requires:[],
+    apply:()=>{ /* handled in advWeek */ } },
+  { id:'sc2', name:'National Scout Network', icon:'🗺️', category:'Scouting',
+    desc:'Scouts in every region. +1 scouting slot per week.',
+    effect:'+1 Scout Slot/wk', cost:1.8, requires:['sc1'],
+    apply:()=>{ scoutPts=Math.min(100,scoutPts+10); } },
+  // Game Day
+  { id:'gd1', name:'Offensive Analyst', icon:'📊', category:'Game Day',
+    desc:'Pre-snap read assistant. QB IQ effectively +8 in play calls.',
+    effect:'QB IQ +8 effective', cost:0.9, requires:[],
+    apply:()=>{ window._qbIQBonus=(window._qbIQBonus||0)+8; } },
+  { id:'gd2', name:'Defensive Coordinator Upgrade', icon:'🛡️', category:'Game Day',
+    desc:'Elite DC reads offenses better. Bad defensive calls hurt 30% less.',
+    effect:'-30% bad call penalty', cost:1.4, requires:['gd1'],
+    apply:()=>{ /* handled in game-sim patch */ } },
+  // Facilities
+  { id:'fac1', name:'Weight Room Expansion', icon:'🏋️', category:'Facilities',
+    desc:'Players develop faster. XP gain +25% for all roster members.',
+    effect:'+25% player XP', cost:1.0, requires:[],
+    apply:()=>{ /* handled in processPlayerProgression */ } },
+  { id:'fac2', name:'Indoor Practice Facility', icon:'🏟️', category:'Facilities',
+    desc:'Elite facility sells recruits. +10 interest to all visits.',
+    effect:'+10 to visit outcomes', cost:3.0, requires:['fac1'],
+    apply:()=>{ /* handled in doAction */ } },
+];
+
+function renderCoach(){
+  const upgrades = GS.coachUpgrades||[];
+  const bank = GS.coachBank||0;
+  const salary = GS.coachSalary||0;
+  const attrs = getCoachAttrs();
+
+  // Group upgrades by category
+  const categories = [...new Set(COACH_UPGRADES.map(u=>u.category))];
+
+  document.getElementById('dw').innerHTML=`
+    <div class="coach-screen">
+      <!-- Left: profile card -->
+      <div class="coach-profile-card">
+        <div class="coach-avatar">🏈</div>
+        <div class="coach-title">${GS.coachName}</div>
+        <div class="coach-school-lbl">${GS.school.name} · Head Coach</div>
+        <div class="coach-salary-row">
+          <span class="coach-salary-lbl">Annual Salary</span>
+          <span class="coach-salary-val">$${salary.toFixed(1)}M</span>
+        </div>
+        <div class="coach-bank-row">
+          <span class="coach-bank-lbl">Available</span>
+          <span class="coach-bank-val">$${bank.toFixed(2)}M</span>
+        </div>
+        <div class="coach-attr-list">
+          ${Object.entries(attrs).map(([k,v])=>`
+            <div class="coach-attr-row">
+              <span class="coach-attr-lbl">${k}</span>
+              <div class="coach-attr-bar"><div class="coach-attr-fill" style="width:${v}%;"></div></div>
+              <span class="coach-attr-val">${v}</span>
+            </div>`).join('')}
+        </div>
+        <div style="margin-top:14px;font-size:11px;color:var(--t3);line-height:1.6;">
+          Salary paid weekly. Buy upgrades to improve your coaching staff and unlock new abilities.
+        </div>
+      </div>
+
+      <!-- Right: upgrades by category -->
+      <div>
+        ${categories.map(cat=>{
+          const catUpgrades = COACH_UPGRADES.filter(u=>u.category===cat);
+          return `
+            <div style="margin-bottom:20px;">
+              <div class="section-label">${cat}</div>
+              <div class="upgrade-grid">
+                ${catUpgrades.map(u=>{
+                  const owned = upgrades.includes(u.id);
+                  const reqsMet = u.requires.every(r=>upgrades.includes(r));
+                  const canBuy = !owned && reqsMet && bank >= u.cost;
+                  const locked = !reqsMet && !owned;
+                  return `<div class="upgrade-card ${owned?'owned':locked?'locked':''}">
+                    ${owned?'<div class="upgrade-owned-badge">✓ OWNED</div>':''}
+                    <div class="upgrade-icon">${u.icon}</div>
+                    <div class="upgrade-name">${u.name}</div>
+                    <div class="upgrade-desc">${u.desc}</div>
+                    <div class="upgrade-effect">${u.effect}</div>
+                    <div class="upgrade-cost">
+                      <span class="upgrade-price">${owned?'Purchased':locked?'🔒 Locked':'$'+u.cost+'M'}</span>
+                      <button class="upgrade-btn ${owned?'bought':canBuy?'buy':'cant'}"
+                        onclick="${canBuy?'buyUpgrade(\''+u.id+'\')':'void(0)'}"
+                        ${canBuy?'':'disabled'}>
+                        ${owned?'Owned':canBuy?'Buy':locked?'Locked':'Need $'+(u.cost-bank).toFixed(2)+'M more'}
+                      </button>
+                    </div>
+                  </div>`;
+                }).join('')}
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+function getCoachAttrs(){
+  const upgrades = GS.coachUpgrades||[];
+  return {
+    Recruiting: Math.min(99, 40 + (GS.school?.prestige||1)*8 + (upgrades.includes('rc1')?12:0) + (upgrades.includes('rc2')?8:0) + (upgrades.includes('rc3')?10:0)),
+    'NIL Mgmt':  Math.min(99, 35 + (GS.school?.prestige||1)*6 + (upgrades.includes('nil1')?15:0) + (upgrades.includes('nil2')?12:0)),
+    Scouting:   Math.min(99, 30 + (GS.school?.prestige||1)*6 + (upgrades.includes('sc1')?14:0) + (upgrades.includes('sc2')?12:0)),
+    'Game Day':  Math.min(99, 40 + (GS.wins||0)*2 + (upgrades.includes('gd1')?12:0) + (upgrades.includes('gd2')?10:0)),
+    Development:Math.min(99, 30 + (GS.school?.prestige||1)*5 + (upgrades.includes('fac1')?14:0) + (upgrades.includes('fac2')?16:0)),
+  };
+}
+
+function buyUpgrade(id){
+  const u = COACH_UPGRADES.find(x=>x.id===id);
+  if(!u) return;
+  if((GS.coachBank||0) < u.cost){ toast('Not Enough Funds','Save more of your salary first.'); return; }
+  GS.coachBank = Math.round((GS.coachBank - u.cost)*100)/100;
+  if(!GS.coachUpgrades) GS.coachUpgrades=[];
+  GS.coachUpgrades.push(id);
+  u.apply();
+  S('coin');
+  toast('✅ Upgrade Purchased', `${u.name} is now active.`);
+  renderCoach();
+}
+
+// ═══════════════════════════════════════════════
+//  RECRUITING WAR ROOM
+// ═══════════════════════════════════════════════
+function renderRecruiting(){
+  const committed = RECRUITS.filter(r=>r.committed&&r.onBoard).length;
+  const onBoard = RECRUITS.filter(r=>r.onBoard&&!r.committed);
+  const hotTargets = onBoard.filter(r=>r.interest>=60).sort((a,b)=>b.interest-a.interest);
+  const coldTargets = onBoard.filter(r=>r.interest<60).sort((a,b)=>a.interest-b.interest);
+
+  document.getElementById('dw').innerHTML=`
+    <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <div>
+        <div class="page-title">Recruiting <span class="page-title-accent">War Room</span></div>
+        <div class="page-sub">${committed} committed · ${offersLeft} offers left · ${officialsLeft} officials left · Week ${GS.week}</div>
+      </div>
+      <div class="view-toggle">
+        <button class="vt-btn${recView==='my'?' active':''}" onclick="setRecView('my')">My Board</button>
+        <button class="vt-btn${recView==='national'?' active':''}" onclick="setRecView('national')">National</button>
+      </div>
+    </div>
+
+    <!-- Budget bar -->
+    <div class="budget-bar">
+      <div class="budget-item">
+        <div class="budget-icon">📞</div>
+        <div class="budget-count ${APused.calls>=AP.calls?'budget-used':'budget-avail'}">${AP.calls-APused.calls}/${AP.calls} calls</div>
+      </div>
+      <div class="budget-sep"></div>
+      <div class="budget-item">
+        <div class="budget-icon">🏠</div>
+        <div class="budget-count ${APused.visits>=AP.visits?'budget-used':'budget-avail'}">${AP.visits-APused.visits}/${AP.visits} visits</div>
+      </div>
+      <div class="budget-sep"></div>
+      <div class="budget-item">
+        <div class="budget-icon">✈️</div>
+        <div class="budget-count ${APused.officials>=AP.officials?'budget-used':'budget-avail'}">${AP.officials-APused.officials}/${AP.officials} official</div>
+      </div>
+      <div class="budget-sep"></div>
+      <div class="budget-item">
+        <div class="budget-icon">💰</div>
+        <div class="budget-count ${APused.nil>=AP.nil?'budget-used':'budget-avail'}">${AP.nil-APused.nil}/${AP.nil} NIL pitch</div>
+      </div>
+      <div style="margin-left:auto;font-size:11px;color:var(--t3);font-style:italic;">Resets next week</div>
+    </div>
+
+    <div class="rec-war-room" id="recWarRoom"></div>`;
+
+  renderRecWarRoom();
+}
+
+function renderRecWarRoom(){
+  const container = document.getElementById('recWarRoom');
+  if(!container) return;
+
+  if(recView==='national'){
+    container.style.gridTemplateColumns='1fr';
+    // Show national view inline using existing logic
+    const area = document.createElement('div');
+    area.id = 'recMainArea';
+    container.innerHTML = '';
+    container.appendChild(area);
+    renderRecMainArea();
+    return;
+  }
+
+  const onBoard = RECRUITS.filter(r=>r.onBoard);
+  const committed = onBoard.filter(r=>r.committed);
+  const active = onBoard.filter(r=>!r.committed).sort((a,b)=>b.interest-a.interest);
+
+  // Sidebar: needs + national search button
+  const sidebar = `
+    <div class="rec-sidebar">
+      <div class="section-label">Positions Needed</div>
+      ${POS_CONFIG.map(p=>{
+        const d=p.need-p.have;
+        const cls=d>=2?'urgent':d===1?'needed':'';
+        return `<div class="need-pill ${cls}${filterPos===p.abbr?' active-filter':''}" onclick="togglePF('${p.abbr}')">
+          <div class="need-pos">${p.abbr}</div>
+          <div class="need-info">
+            <div class="need-name">${p.name}</div>
+            <div class="need-status" style="color:${d>=2?'#f08080':d>=1?'var(--gold)':'#5fda90'}">${d>=2?'URGENT':d>=1?'NEED':'SOLID'}</div>
+          </div>
+          <div class="ap-ring${d>=2?' has':''}">${p.have}/${p.need}</div>
+        </div>`;
+      }).join('')}
+      <div style="margin-top:8px;">
+        <button class="vt-btn" style="width:100%;padding:10px;" onclick="setRecView('national');renderRecruiting()">
+          🔍 Search National Board
+        </button>
+      </div>
+    </div>`;
+
+  // Main: target cards
+  let mainHtml = '';
+
+  if(committed.length){
+    mainHtml += `<div class="section-label">Committed (${committed.length})</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;margin-bottom:16px;">
+        ${committed.map(r=>`
+          <div class="target-card committed">
+            <div class="commit-banner">✅ ${r.first} ${r.last} · ${r.pos} · ${'★'.repeat(r.stars)}</div>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  if(active.length){
+    mainHtml += `<div class="section-label">Active Targets (${active.length})</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;">
+        ${active.map(r=>warRoomCard(r)).join('')}
+      </div>`;
+  } else {
+    mainHtml += `<div style="text-align:center;padding:40px 20px;color:var(--t3);">
+      <div style="font-size:32px;margin-bottom:12px;">📋</div>
+      <div style="font-family:var(--co);font-size:18px;color:#fff;margin-bottom:8px;">Board is empty</div>
+      <div style="font-size:13px;">Find recruits in the National Board and add them.</div>
+      <button class="cta" style="margin-top:20px;" onclick="setRecView('national');renderRecruiting()">Browse National →</button>
+    </div>`;
+  }
+
+  container.innerHTML = `<div>${mainHtml}</div>${sidebar}`;
+}
+
+function warRoomCard(r){
+  const iColor = r.interest>=75?'high':r.interest>=45?'mid':'low';
+  const iTextCol = r.interest>=75?'#4fce8a':r.interest>=45?'var(--gold)':'#e07070';
+  const cardCls = r.rivalAlert?'rival-danger':r.interest>=75?'on-fire':'';
+  const ovrDisplay = r.scouted?r.trueOvr:(r.scoutPts>0?`~${Math.round(r.surfOvr+(r.trueOvr-r.surfOvr)*(r.scoutPts/100))}`:r.surfOvr);
+  const ovrCol = r.scouted?(r.trueOvr>=88?'#FFD700':r.trueOvr>=80?'#4fce8a':'#fff'):'rgba(255,255,255,.4)';
+
+  const canCall=APused.calls<AP.calls;
+  const canVisit=APused.visits<AP.visits&&r.stage>=1;
+  const canNil=APused.nil<AP.nil&&r.stage>=2;
+  const canOfficial=APused.officials<AP.officials&&r.stage>=1&&officialsLeft>0;
+
+  const stageColors=['rgba(255,255,255,.1)','rgba(74,143,212,.2)','rgba(232,160,32,.2)','rgba(139,111,212,.2)','rgba(58,158,104,.3)'];
+  const stageColor = stageColors[r.stage]||stageColors[0];
+
+  return `<div class="target-card ${cardCls}" style="border-top:3px solid ${r.interest>=75?'var(--tc)':r.interest>=45?'var(--gold)':'var(--danger)'}">
+    <div class="tc-top">
+      <div class="tc-avatar" style="background:${r.bgColor};">${r.first[0]}${r.last[0]}</div>
+      <div class="tc-info">
+        <div class="tc-name">${r.first} ${r.last}</div>
+        <div class="tc-meta">${r.pos} · ${r.hometown}</div>
+        <div class="tc-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      </div>
+      <div>
+        <div class="tc-ovr-badge" style="color:${ovrCol};">${ovrDisplay}</div>
+        <div style="font-size:9px;color:var(--t3);text-align:center;font-family:var(--co);">${r.scouted?'OVR':'~OVR'}</div>
+      </div>
+    </div>
+
+    ${r.rivalAlert?`<div class="rival-alert-bar">⚠️ ${r.rivalAlert}</div>`:''}
+
+    <div class="interest-bar-wrap">
+      <div class="interest-bar-label">
+        <span class="interest-bar-lbl">Interest</span>
+        <span class="interest-bar-pct" style="color:${iTextCol};">${r.interest}%</span>
+      </div>
+      <div class="interest-bar-track">
+        <div class="interest-bar-fill ${iColor}" style="width:${r.interest}%;"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+      ${STAGES.map((s,i)=>`
+        <div style="flex:1;height:3px;border-radius:var(--rpill);background:${i<r.stage?'var(--tc)':i===r.stage?'rgba(255,255,255,.3)':'rgba(255,255,255,.08)'};" title="${s}"></div>
+      `).join('')}
+      <div style="font-family:var(--co);font-size:9px;color:var(--t3);white-space:nowrap;">${STAGES[r.stage]}</div>
+    </div>
+
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <button class="tc-act call" onclick="doAction('call',${r.id})" ${!canCall?'disabled':''}>📞 Call</button>
+      ${r.stage===0?`<button class="tc-act" style="border-color:rgba(58,158,104,.35);color:#5fda90;" onclick="doOffer(${r.id})" ${offersLeft<=0?'disabled':''}>🎓 Offer</button>`:''}
+      ${r.stage>=1?`<button class="tc-act visit" onclick="doAction('visit',${r.id})" ${!canVisit?'disabled':''}>🏠 Visit</button>`:''}
+      ${r.stage>=1?`<button class="tc-act official" onclick="openVisitScheduler(${r.id})" ${!canOfficial?'disabled':''}>✈️ Official</button>`:''}
+      ${r.stage>=2?`<button class="tc-act nil" onclick="doAction('nil',${r.id})" ${!canNil?'disabled':''}>💰 NIL</button>`:''}
+      ${!r.scouted?`<button class="tc-act" onclick="startScouting(${r.id})" style="border-color:rgba(139,111,212,.35);color:#c0a8ff;">🔍 Scout</button>`:''}
+    </div>
+  </div>`;
+}
 </script>
 </body>
 </html>
